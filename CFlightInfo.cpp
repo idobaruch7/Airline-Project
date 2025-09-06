@@ -16,11 +16,15 @@ bool CFlightInfo::isValidPositiveInt(int value) const
 
 // Constructors
 CFlightInfo::CFlightInfo(const string& dest, int number, int timeMinutes, int distance)
-	: flightNumber(isValidPositiveInt(number) ? number : 0),
-	destination(isValidString(dest) ? dest : "Unknown Destination"),
-	flightTimeMinutes(isValidPositiveInt(timeMinutes) ? timeMinutes : 0),
-	distanceKM(isValidPositiveInt(distance) ? distance : 0)
+	: destination(""),
+	flightNumber(0),
+	flightTimeMinutes(0),
+	distanceKM(0)
 {
+	setDest(dest);
+	setFlightNumber(number);
+	setFlightTimeMinutes(timeMinutes);
+	setDistanceKM(distance);
 }
 
 CFlightInfo::CFlightInfo(const CFlightInfo& other)
