@@ -24,12 +24,12 @@ CFlight* CFlightCompany::getFlightByNumber(int flightNumber)
 // Helper function to find crew member by employee number
 CCrewMember* CFlightCompany::getCrewMemberByNumber(int employeeNumber)
 {
-	// Note: Since CCrewMember doesn't have an employee number field in the signature,
-	// I'm assuming we need to use a different identifier. 
-	// For now, I'll use the crew member's position in the array as the employee number
-	if (employeeNumber >= 0 && employeeNumber < crewCount && 
-		crewMembers[employeeNumber] != nullptr) {
-		return crewMembers[employeeNumber];
+	// Search through all crew members to find one with matching member number
+	for (int i = 0; i < crewCount; i++) {
+		if (crewMembers[i] != nullptr && 
+			crewMembers[i]->getMember() == employeeNumber) {
+			return crewMembers[i];
+		}
 	}
 	return nullptr; // Crew member not found
 }
@@ -110,7 +110,7 @@ bool CFlightCompany::addCrewMember(const CCrewMember& member)
 	
 	// Check if crew member already exists in the company
 	for (int i = 0; i < crewCount; i++) {
-		if (crewMembers[i] != nullptr && crewMembers[i]->isEqual(member)) {
+		if (crewMembers[i] != nullptr && *crewMembers[i] == (member)) {
 			return false; // Crew member already exists
 		}
 	}
@@ -130,7 +130,7 @@ bool CFlightCompany::addPlane(const CPlane& plane)
 
 	// Check if plane already exists in the company
 	for (int i = 0; i < planeCount; i++) {
-		if (planes[i] != nullptr && planes[i]->isEqual(plane)) {
+		if (planes[i] != nullptr && *planes[i] == (plane)) {
 			return false; // Plane already exists
 		}
 	}
@@ -151,7 +151,7 @@ bool CFlightCompany::addFlight(const CFlight& flight)
 	// Check if flight already exists in the company (compare by flight info)
 	for (int i = 0; i < flightCount; i++) {
 		if (flights[i] != nullptr &&
-			flights[i]->getFlightInfo().isEqual(flight.getFlightInfo())) {
+			flights[i]->getFlightInfo() == (flight.getFlightInfo())) {
 			return false; // Flight already exists
 		}
 	}

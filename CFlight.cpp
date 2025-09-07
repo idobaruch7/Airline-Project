@@ -13,7 +13,7 @@ int CFlight::findCrewMemberIndex(const CCrewMember& member) const
 {
     for (int i = 0; i < crewCount; i++)
     {
-        if (crewMembers[i] != nullptr && crewMembers[i]->isEqual(member))
+        if (crewMembers[i] != nullptr && *crewMembers[i] == member)
         {
             return i;
         }
@@ -231,7 +231,7 @@ CFlight CFlight::operator+(CCrewMember* member) const
 bool CFlight::operator==(const CFlight& other) const
 {
     // Compare flight info first
-    if (!flightInfo.isEqual(other.flightInfo))
+    if (!(flightInfo == (other.flightInfo)))
     {
         return false;
     }
@@ -255,7 +255,7 @@ bool CFlight::operator==(const CFlight& other) const
     else
     {
         // Both have planes assigned - compare them
-        if (!assignedPlane->isEqual(*other.assignedPlane))
+        if (!(*assignedPlane == (*other.assignedPlane)))
         {
             return false;
         }
@@ -276,7 +276,7 @@ bool CFlight::operator==(const CFlight& other) const
         else
         {
             // Both exist, compare the crew members
-            if (!crewMembers[i]->isEqual(*other.crewMembers[i]))
+            if (! (*crewMembers[i] == (*other.crewMembers[i])))
             {
                 return false;
             }
