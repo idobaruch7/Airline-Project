@@ -33,6 +33,15 @@
     <ClCompile Include="CCrewMember.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="CFlight.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="testCFlight.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="testCFC.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CFlightCompany.h">
@@ -48,6 +57,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="CCrewMember.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CFlight.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

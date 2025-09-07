@@ -290,18 +290,26 @@ bool CFlight::operator==(const CFlight& other) const
 // The existing operator<< serves as the print operator (equivalent to operator>>)
 ostream& operator<<(ostream& os, const CFlight& flight)
 {
+    // Print flight information
     os << "Flight " << flight.flightInfo.getFlightNumber() 
-       << " to " << flight.flightInfo.getDest();
+       << " to " << flight.flightInfo.getDest()
+       << " (" << flight.flightInfo.getFlightTimeMinutes() << " minutes, " 
+       << flight.flightInfo.getDistanceKM() << " km)";
     
+    // Print plane information
     if (flight.hasPlane())
     {
-        os << " (Plane: " << flight.assignedPlane->getModelName() << ")";
+        os << ", Plane: " << flight.assignedPlane->getModelName() 
+           << " " << flight.assignedPlane->getSerialNumber()
+           << " (Seats: " << flight.assignedPlane->getSeatCount() << ")";
     }
     else
     {
-        os << " (No plane assigned)";
+        os << ", No plane assigned";
     }
     
-    os << " [Crew: " << flight.crewCount << "/" << MAX_CREW << "]";
+    // Print crew count
+    os << ", Crew: " << flight.crewCount << "/" << MAX_CREW;
+    
     return os;
 }
