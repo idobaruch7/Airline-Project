@@ -180,9 +180,12 @@ bool CFlightCompany::addCrewToFlight(int employeeNumber, int flightNumber)
 	return flight->addCrewMember(crewMember);
 }
 
-void CFlightCompany::print() const
+void CFlightCompany::print(ostream& os) const
 {
-	cout << "Flight company: " << companyName << endl;
+	os << "Flight company: " << companyName << endl;
+	os << "Crew count: " << crewCount << endl;
+	os << "Plane count: " << planeCount << endl;
+	os << "Flight count: " << flightCount << endl;
 }
 
 CFlightCompany::~CFlightCompany()

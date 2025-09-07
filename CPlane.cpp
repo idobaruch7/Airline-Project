@@ -4,6 +4,8 @@
 
 using namespace std;
 
+int CPlane::nextSerial = 100;
+
 // Helper functions
 bool CPlane::isValidString(const string& str) const
 {
@@ -16,14 +18,12 @@ bool CPlane::isValidPositiveInt(int value) const
 }
 
 // Constructor
-CPlane::CPlane(int number, int count, const string& name)
-	: serialNumber(0),
-	seatCount(0),
-	modelName("")
+CPlane::CPlane(int count, const string& name)
+	:serialNumber(nextSerial++),
+	modelName(isValidString(name) ? name : "Unknown Model"),
+	seatCount(isValidPositiveInt(count) ? count : 0)
 {
-	setSerialNumber(number);
-	setSeatCount(count);
-	setModelName(name);
+
 }
 
 // Copy Constructor
@@ -32,17 +32,10 @@ CPlane::CPlane(const CPlane& other)
 	modelName(other.modelName),
 	seatCount(other.seatCount)
 {
+
 }
 
 // Setters
-void CPlane::setSerialNumber(int number)
-{
-	if (isValidPositiveInt(number)) {
-		serialNumber = number;
-	}
-	// If invalid, don't change the serial number
-}
-
 void CPlane::setModelName(const string& name)
 {
 	if (isValidString(name)) {
@@ -78,7 +71,7 @@ int CPlane::getSeatCount() const
 // Functions
 bool CPlane::isEqual(const CPlane& other) const
 {
-	return serialNumber == other.serialNumber;
+	return  serialNumber == other.serialNumber;
 }
 
 void CPlane::print() const
@@ -86,6 +79,47 @@ void CPlane::print() const
 	cout << "Plane " << serialNumber
 		<< " degem " << modelName
 		<< " seats " << seatCount << endl;
+}
+
+//Operations Functions
+ostream& operator<<(ostream& os, const CPlane& plane)
+{
+	os << "Plane " << plane.serialNumber << "degem " << plane.modelName << "seats " << plane.seatCount << endl;
+	return os; // allows chaining like cout >> a >> b;;
+}
+
+
+bool CPlane::operator==(const CPlane& other) const
+{
+	return isEqual(other);
+}
+
+bool CPlane::operator!=(const CPlane& other)const
+{
+	return !isEqual(other);
+}
+
+CPlane& CPlane::operator=(const CPlane& other)
+{
+	if (this != &other) { // protect against self-assignment
+		serialNumber = other.serialNumber;
+		modelName = other.modelName;
+		seatCount = other.seatCount;
+	}
+	return *this; // allow chaining
+}
+
+CPlane& CPlane::operator++()
+{
+	++seatCount;
+	return *this;
+}
+
+CPlane CPlane::operator++(int)
+{
+	CPlane temp = *this;
+	++seatCount;
+	return temp;
 }
 
 CPlane::~CPlane()

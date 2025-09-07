@@ -309,7 +309,7 @@ ostream& operator<<(ostream& os, const CFlight& flight)
     }
     
     // Print crew count
-    os << ", Crew: " << flight.crewCount << "/" << MAX_CREW;
+    os << ", Crew: " << flight.crewCount << "/" << MAX_CREW << "\n";
     
     return os;
 }

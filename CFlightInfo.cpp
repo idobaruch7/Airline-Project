@@ -16,15 +16,11 @@ bool CFlightInfo::isValidPositiveInt(int value) const
 
 // Constructors
 CFlightInfo::CFlightInfo(const string& dest, int number, int timeMinutes, int distance)
-	: destination(""),
-	flightNumber(0),
-	flightTimeMinutes(0),
-	distanceKM(0)
+	: flightNumber(isValidPositiveInt(number) ? number : 0),
+	destination(isValidString(dest) ? dest : "Unknown Destination"),
+	flightTimeMinutes(isValidPositiveInt(timeMinutes) ? timeMinutes : 0),
+	distanceKM(isValidPositiveInt(distance) ? distance : 0)
 {
-	setDest(dest);
-	setFlightNumber(number);
-	setFlightTimeMinutes(timeMinutes);
-	setDistanceKM(distance);
 }
 
 CFlightInfo::CFlightInfo(const CFlightInfo& other)
@@ -101,6 +97,46 @@ void CFlightInfo::print() const
 		<< " Number " << flightNumber
 		<< " minutes " << flightTimeMinutes
 		<< " KM " << distanceKM << endl;
+}
+
+//Operations Functions
+ostream& operator<<(ostream& os, const CFlightInfo& flightInfo)
+{
+	os << "Flight Info dest: " << flightInfo.destination
+		<< " Number " << flightInfo.flightNumber
+		<< " minutes " << flightInfo.flightTimeMinutes
+		<< " KM " << flightInfo.distanceKM << endl;
+
+	return os; // allows chaining like cout >> a >> b;;
+}
+
+bool CFlightInfo::operator==(const CFlightInfo& other) const
+{
+	return isEqual(other);
+}
+
+bool CFlightInfo::operator!=(const CFlightInfo& other) const
+{
+	return !isEqual(other);
+}
+
+CFlightInfo& CFlightInfo::operator=(const CFlightInfo& other)
+{
+
+	if (this != &other) { // protect against self-assignment
+		flightNumber = other.flightNumber;
+		destination = other.destination;
+		flightTimeMinutes = other.flightTimeMinutes;
+		distanceKM = other.distanceKM;
+	}
+
+	return *this; // allow chaining
+}
+
+
+CFlightInfo::operator int() const
+{
+	return flightTimeMinutes;
 }
 
 // Destructor

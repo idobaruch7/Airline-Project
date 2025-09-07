@@ -64,9 +64,61 @@ int CAddress::getHouseNumber() const {
     return houseNumber;
 }
 
+bool CAddress::isEqual(const CAddress& other) const {
+    return city == other.city && street == other.street && houseNumber == other.houseNumber;
+}
+
 // Print
 void CAddress::print() const {
     cout << street << " " << houseNumber << ", " << city << endl;
+}
+
+//Operations Functions
+ostream& operator<<(ostream& os, const CAddress& addr)
+{
+    os << addr.street << " " << addr.houseNumber << " " << addr.city << endl;
+    return os; // allows chaining like cout >> a >> b;;
+}
+
+istream& operator>>(istream& is, CAddress& addr)
+{
+
+    cout << "Enter house number: ";
+    is >> addr.houseNumber;
+
+    cout << "Enter street: ";
+    is >> addr.street;
+
+    cout << "Enter city: ";
+    is >> addr.city;
+
+    return is; // allows chaining like cin >> a >> b;
+}
+
+bool CAddress::operator==(const CAddress& other) const
+{
+    return isEqual(other);
+
+}
+
+bool CAddress::operator!=(const CAddress& other) const
+{
+    return !isEqual(other);
+}
+
+CAddress& CAddress::operator=(const CAddress& other)
+{
+    if (this != &other) { // protect against self-assignment
+        houseNumber = other.houseNumber;
+        street = other.street;
+        city = other.city;
+    }
+    return *this; // allow chaining
+}
+
+string CAddress::getCurrentAddress()const
+{
+    return street + " " + to_string(houseNumber) + " " + city;
 }
 
 // UpdateAddress with validation - only update valid data
@@ -87,3 +139,5 @@ void CAddress::updateAddress(const string& newCity, const string& newStreet, int
 
 CAddress::~CAddress() {
 }
+
+

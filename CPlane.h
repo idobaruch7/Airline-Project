@@ -6,6 +6,7 @@ using namespace std;
 class CPlane
 {
 private:
+	static int nextSerial;
 	int serialNumber;
 	int seatCount;
 	string modelName;
@@ -15,12 +16,14 @@ private:
 	bool isValidPositiveInt(int value) const;
 
 public:
+	//Default Constructor Deletion
+	CPlane() = delete;
+
 	// Constructors
-	CPlane(int number, int count, const string& name);
+	CPlane(int count, const string& name);
 	CPlane(const CPlane& other);
 
 	// Setters
-	void setSerialNumber(int number);
 	void setModelName(const string& name);
 	void setSeatCount(int count);
 
@@ -34,4 +37,16 @@ public:
 
 	// Destructor
 	~CPlane();
+
+	//Operations
+	friend ostream& operator<<(ostream& os, const CPlane& plane); //<<
+
+	bool operator==(const CPlane& other) const;
+	bool operator!=(const CPlane& other) const;
+	CPlane& operator++();
+	CPlane operator++(int);
+
+	CPlane& operator=(const CPlane& other);
+
+
 };

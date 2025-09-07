@@ -35,6 +35,8 @@ public:
 	CFlightCompany(const string& name);
 	CFlightCompany(const CFlightCompany& other);
 
+	CFlightCompany() = delete;
+
 	void setName(const string& name);
 	const string& getName() const;
 
@@ -45,7 +47,7 @@ public:
 
 	CPlane* getPlane(int index);
 
-	void print() const;
+	void print(ostream& os) const;
 
 	~CFlightCompany();
 };
