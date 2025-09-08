@@ -26,6 +26,8 @@ public:
     CFlight(const CFlightInfo& info, CPlane* plane);     // Constructor with flight info and plane
     CFlight(const CFlight& other);                       // Copy constructor
 
+    CFlight() = delete;
+
     // Destructor
     ~CFlight();
 

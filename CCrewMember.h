@@ -8,6 +8,8 @@ using namespace std;
 
 class CCrewMember {
 private:
+    static int nextMember;
+    int member;
     string name;
     int airTime;
     CAddress address;
@@ -15,8 +17,15 @@ private:
     bool isValidName(const string& name) const;
 
 public:
+
+    //Default Constructor Deletion
+    CCrewMember() = delete;
+
     // Constructor (airMinutes default = 0)
     CCrewMember(const string& name, const CAddress& address, int airMinutes = 0);
+
+    // Constructor (no address)
+    CCrewMember(const string& name, int airMinutes = 0);
 
     // Copy Constructor
     CCrewMember(const CCrewMember& other);
@@ -35,6 +44,9 @@ public:
     const CAddress& getAddress() const;
     void setAddress(const CAddress& newAddress);
 
+    // Get member serial
+    int getMember() const;
+
     // Get air time
     int getAirTime() const;
 
@@ -43,5 +55,16 @@ public:
 
     // Compare by name
     bool isEqual(const CCrewMember& other) const;
+
+    //Operations
+    friend ostream& operator<<(ostream& os, const CCrewMember& flightInfo); //<<
+
+    bool operator==(const CCrewMember& other) const;
+    bool operator+=(const int updatedAirMinutes);
+
+    CCrewMember& operator=(const CCrewMember& other);
 };
+
+
+
 
