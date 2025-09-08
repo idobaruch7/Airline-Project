@@ -14,11 +14,10 @@ bool CCrewMember::isValidName(const string& name) const
 
 // Constructor with validation
 CCrewMember::CCrewMember(const string& name, const CAddress& address, int airMinutes)
-    : name(""), address(address), member(nextMember++)
+    : name(""), address(address), airTime(0), member(nextMember++)
 {
     setName(name);
-
-    this->airTime = (airMinutes >= 0) ? airMinutes : 0;
+    updateMinutes(airMinutes);
 }
 
 // Constructor (no address)

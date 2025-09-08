@@ -130,9 +130,6 @@
     <ClCompile Include="CPlane.cpp" />
     <ClCompile Include="CCrewMember.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="testCFC.cpp" />
-    <ClCompile Include="testCFlight.cpp" />
-    <ClCompile Include="testCM.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CAddress.h" />

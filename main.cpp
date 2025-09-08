@@ -115,9 +115,9 @@ void main()
 	pDelta->print(cout);
 
 
-	//pDelta->addCrewToFlight(fInfo1.getFlightNumber(), CCrewMember::START_ID);
-	//pDelta->addCrewToFlight(fInfo1.getFlightNumber(), CCrewMember::START_ID + 1);
-	//pDelta->addCrewToFlight(fInfo1.getFlightNumber(), CCrewMember::START_ID + 2);
+	pDelta->addCrewToFlight(fInfo1.getFlightNumber(), CCrewMember::nextMember);
+	pDelta->addCrewToFlight(fInfo1.getFlightNumber(), CCrewMember::nextMember + 1);
+	pDelta->addCrewToFlight(fInfo1.getFlightNumber(), CCrewMember::nextMember + 2);
 
 	cout << "******** After adding Crew to Flight *********" << endl;
 	pDelta->print(cout);

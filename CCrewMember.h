@@ -8,7 +8,6 @@ using namespace std;
 
 class CCrewMember {
 private:
-    static int nextMember;
     int member;
     string name;
     int airTime;
@@ -16,7 +15,9 @@ private:
 
     bool isValidName(const string& name) const;
 
+
 public:
+    static int nextMember;
 
     //Default Constructor Deletion
     CCrewMember() = delete;

@@ -20,10 +20,11 @@ bool CPlane::isValidPositiveInt(int value) const
 // Constructor
 CPlane::CPlane(int count, const string& name)
 	:serialNumber(nextSerial++),
-	modelName(isValidString(name) ? name : "Unknown Model"),
-	seatCount(isValidPositiveInt(count) ? count : 0)
+	modelName("Unknown Model"),
+	seatCount(0)
 {
-
+	setModelName(name);
+	setSeatCount(count);
 }
 
 // Copy Constructor
