@@ -9,6 +9,20 @@ bool CFlightCompany::isValidName(const string& name) const
 	return !name.empty();
 }
 
+void CFlightCompany::initializeArrays()
+{
+	// Initialize pointer arrays to nullptr
+	for (int i = 0; i < MAX_CREWS; i++) {
+		crewMembers[i] = nullptr;
+	}
+	for (int i = 0; i < MAX_PLANES; i++) {
+		planes[i] = nullptr;
+	}
+	for (int i = 0; i < MAX_FLIGHT; i++) {
+		flights[i] = nullptr;
+	}
+}
+
 // Helper function to find flight by flight number
 CFlight* CFlightCompany::getFlightByNumber(int flightNumber)
 {
@@ -38,15 +52,7 @@ CFlightCompany::CFlightCompany(const string& name)
 	: companyName(""), crewCount(0), planeCount(0), flightCount(0)
 {
 	// Initialize pointer arrays to nullptr
-	for (int i = 0; i < MAX_CREWS; i++) {
-		crewMembers[i] = nullptr;
-	}
-	for (int i = 0; i < MAX_PLANES; i++) {
-		planes[i] = nullptr;
-	}
-	for (int i = 0; i < MAX_FLIGHT; i++) {
-		flights[i] = nullptr;
-	}
+	initializeArrays();
 	
 	setName(name);
 }
@@ -56,15 +62,7 @@ CFlightCompany::CFlightCompany(const CFlightCompany& other)
 	  planeCount(other.planeCount), flightCount(other.flightCount)
 {
 	// Initialize all arrays to nullptr first
-	for (int i = 0; i < MAX_CREWS; i++) {
-		crewMembers[i] = nullptr;
-	}
-	for (int i = 0; i < MAX_PLANES; i++) {
-		planes[i] = nullptr;
-	}
-	for (int i = 0; i < MAX_FLIGHT; i++) {
-		flights[i] = nullptr;
-	}
+	initializeArrays();
 
 	// Copy crew members (create new copies)
 	for (int i = 0; i < crewCount; i++) {
@@ -162,7 +160,7 @@ bool CFlightCompany::addFlight(const CFlight& flight)
 	return true;
 }
 
-bool CFlightCompany::addCrewToFlight(int employeeNumber, int flightNumber)
+bool CFlightCompany::addCrewToFlight(int flightNumber, int employeeNumber)
 {
 	// Find the flight by flight number
 	CFlight* flight = getFlightByNumber(flightNumber);
@@ -183,9 +181,30 @@ bool CFlightCompany::addCrewToFlight(int employeeNumber, int flightNumber)
 void CFlightCompany::print(ostream& os) const
 {
 	os << "Flight company: " << companyName << endl;
-	os << "Crew count: " << crewCount << endl;
-	os << "Plane count: " << planeCount << endl;
-	os << "Flight count: " << flightCount << endl;
+	
+	// Print crew members
+	os << "There are " << crewCount << " Crew members:" << endl;
+	for (int i = 0; i < crewCount; i++) {
+		if (crewMembers[i] != nullptr) {
+			crewMembers[i]->print(); // This outputs directly to cout
+		}
+	}
+	
+	// Print planes
+	os << "There are " << planeCount << " Planes:" << endl;
+	for (int i = 0; i < planeCount; i++) {
+		if (planes[i] != nullptr) {
+			planes[i]->print(); // This outputs directly to cout
+		}
+	}
+	
+	// Print flights
+	os << "There are " << flightCount << " Flights:" << endl;
+	for (int i = 0; i < flightCount; i++) {
+		if (flights[i] != nullptr) {
+			flights[i]->print(); // This outputs directly to cout
+		}
+	}
 }
 
 CFlightCompany::~CFlightCompany()

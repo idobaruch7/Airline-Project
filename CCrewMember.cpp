@@ -14,23 +14,18 @@ bool CCrewMember::isValidName(const string& name) const
 
 // Constructor with validation
 CCrewMember::CCrewMember(const string& name, const CAddress& address, int airMinutes)
-    : address(address), member(nextMember++)
+    : name(""), address(address), member(nextMember++)
 {
-    if (isValidName(name)) {
-        this->name = name;
-    }
-    else {
-        this->name = "Unknown";
-    }
+    setName(name);
 
     this->airTime = (airMinutes >= 0) ? airMinutes : 0;
 }
 
-//// Constructor (no address)
-CCrewMember::CCrewMember(const string& name, int airMinutes) : member(nextMember++), address(0, "Unknown Street")
+// Constructor (no address)
+CCrewMember::CCrewMember(const string& name, int airMinutes) : name(""), member(nextMember++), address(0, "Unknown Street")
 {
     this->airTime = (airMinutes >= 0) ? airMinutes : 0;
-
+    setName(name);
 }
 
 // Copy Constructor

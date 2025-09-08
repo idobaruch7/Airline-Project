@@ -84,8 +84,8 @@ void CPlane::print() const
 //Operations Functions
 ostream& operator<<(ostream& os, const CPlane& plane)
 {
-	os << "Plane " << plane.serialNumber << "degem " << plane.modelName << "seats " << plane.seatCount << endl;
-	return os; // allows chaining like cout >> a >> b;;
+	os << "Plane " << plane.serialNumber << " degem " << plane.modelName << " seats " << plane.seatCount << endl;
+	return os;
 }
 
 

@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <iostream>
 #include "CCrewMember.h"
 #include "CPlane.h"
 #include "CFlight.h"
@@ -30,6 +31,7 @@ private:
 	// Helper functions
 	CFlight* getFlightByNumber(int flightNumber);
 	CCrewMember* getCrewMemberByNumber(int employeeNumber);
+	void initializeArrays();
 
 public:
 	CFlightCompany(const string& name);
@@ -43,7 +45,7 @@ public:
 	bool addCrewMember(const CCrewMember& member);
 	bool addPlane(const CPlane& plane);
 	bool addFlight(const CFlight& flight);
-	bool addCrewToFlight(int employeeNumber, int flightNumber);
+	bool addCrewToFlight(int flightNumber, int employeeNumber);
 
 	CPlane* getPlane(int index);
 

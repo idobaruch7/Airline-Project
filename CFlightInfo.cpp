@@ -96,7 +96,7 @@ void CFlightInfo::print() const
 	cout << "Flight Info dest: " << destination
 		<< " Number " << flightNumber
 		<< " minutes " << flightTimeMinutes
-		<< " KM " << distanceKM << endl;
+		<< " KM " << distanceKM << endl;  // Make sure this has endl
 }
 
 //Operations Functions

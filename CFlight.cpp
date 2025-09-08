@@ -164,41 +164,6 @@ void CFlight::setFlightInfo(const CFlightInfo& info)
     flightInfo = info;
 }
 
-// Utility methods
-void CFlight::print() const
-{
-    cout << "Flight Details:" << endl;
-    cout << "  ";
-    flightInfo.print();
-    
-    if (hasPlane())
-    {
-        cout << "  Assigned Plane: ";
-        assignedPlane->print();
-    }
-    else
-    {
-        cout << "  Plane: UNASSIGNED" << endl;
-    }
-
-    cout << "  Crew Members (" << crewCount << "/" << MAX_CREW << "):" << endl;
-    if (crewCount == 0)
-    {
-        cout << "    No crew assigned" << endl;
-    }
-    else
-    {
-        for (int i = 0; i < crewCount; i++)
-        {
-            cout << "    " << (i + 1) << ". ";
-            if (crewMembers[i] != nullptr)
-            {
-                crewMembers[i]->print();
-            }
-        }
-    }
-}
-
 // Operators
 CFlight& CFlight::operator=(const CFlight& other)
 {
@@ -290,26 +255,48 @@ bool CFlight::operator==(const CFlight& other) const
 // The existing operator<< serves as the print operator (equivalent to operator>>)
 ostream& operator<<(ostream& os, const CFlight& flight)
 {
-    // Print flight information
-    os << "Flight " << flight.flightInfo.getFlightNumber() 
-       << " to " << flight.flightInfo.getDest()
-       << " (" << flight.flightInfo.getFlightTimeMinutes() << " minutes, " 
-       << flight.flightInfo.getDistanceKM() << " km)";
-    
-    // Print plane information
-    if (flight.hasPlane())
-    {
-        os << ", Plane: " << flight.assignedPlane->getModelName() 
-           << " " << flight.assignedPlane->getSerialNumber()
-           << " (Seats: " << flight.assignedPlane->getSeatCount() << ")";
-    }
-    else
-    {
-        os << ", No plane assigned";
-    }
-    
-    // Print crew count
-    os << ", Crew: " << flight.crewCount << "/" << MAX_CREW << "\n";
-    
-    return os;
+	os << "Flight ";
+	os << "Flight Info dest: " << flight.flightInfo.getDest()
+	   << " Number " << flight.flightInfo.getFlightNumber()
+	   << " minutes " << flight.flightInfo.getFlightTimeMinutes()
+	   << " KM " << flight.flightInfo.getDistanceKM() << endl;
+	
+	if (flight.hasPlane())
+	{
+		os << "Plane " << flight.assignedPlane->getSerialNumber()
+		   << " degem " << flight.assignedPlane->getModelName()
+		   << " seats " << flight.assignedPlane->getSeatCount() << endl;
+	}
+	else
+	{
+		os << " No plane assign yet";
+	}
+	
+	os << "  There are " << flight.crewCount << " crew memebers in flight:" << endl;
+	
+	return os;
+}
+
+void CFlight::print() const
+{
+	cout << "Flight ";
+	flightInfo.print();
+	
+	if (hasPlane())
+	{
+		assignedPlane->print();
+	}
+	else
+	{
+		cout << " No plane assign yet";
+	}
+
+	cout << "There are " << crewCount << " crew memebers in flight:" << endl;
+	for (int i = 0; i < crewCount; i++)
+	{
+		if (crewMembers[i] != nullptr)
+		{
+			crewMembers[i]->print();
+		}
+	}
 }

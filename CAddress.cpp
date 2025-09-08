@@ -13,15 +13,17 @@ bool CAddress::isValidHouseNumber(int number) const {
 }
 
 // Constructor with validation
-CAddress::CAddress(int houseNumber, const string& street, const string& city) {
+CAddress::CAddress(int houseNumber, const string& street, const string& city) 
+    : houseNumber(1), street("Unknown Street"), city("Unknown City")
+{
     // Validate and set house number
-    this->houseNumber = isValidHouseNumber(houseNumber) ? houseNumber : 1;
+    setHouseNumber(houseNumber);
 
     // Validate and set street
-    this->street = isValidString(street) ? street : "Unknown Street";
+    setStreet(street);
 
     // Validate and set city
-    this->city = isValidString(city) ? city : "Unknown City";
+    setCity(city);
 }
 
 // Copy Constructor
@@ -83,13 +85,11 @@ ostream& operator<<(ostream& os, const CAddress& addr)
 istream& operator>>(istream& is, CAddress& addr)
 {
 
-    cout << "Enter house number: ";
+    cout << "Please enter house number street name and city name: \n";
     is >> addr.houseNumber;
 
-    cout << "Enter street: ";
     is >> addr.street;
 
-    cout << "Enter city: ";
     is >> addr.city;
 
     return is; // allows chaining like cin >> a >> b;
