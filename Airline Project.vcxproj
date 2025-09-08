@@ -124,14 +124,18 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="CAddress.cpp" />
+    <ClCompile Include="CFlight.cpp" />
     <ClCompile Include="CFlightCompany.cpp" />
     <ClCompile Include="CFlightInfo.cpp" />
     <ClCompile Include="CPlane.cpp" />
     <ClCompile Include="CCrewMember.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="testCFC.cpp" />
+    <ClCompile Include="testCFlight.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CAddress.h" />
+    <ClInclude Include="CFlight.h" />
     <ClInclude Include="CFlightCompany.h" />
     <ClInclude Include="CFlightInfo.h" />
     <ClInclude Include="CPlane.h" />
