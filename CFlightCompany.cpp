@@ -32,8 +32,7 @@ void CFlightCompany::pilotsToSimulator() const
 		if (crewMembers[i] != nullptr) {
 			CPilot* pilot = dynamic_cast<CPilot*>(crewMembers[i]);
 			if (pilot != nullptr) {
-				cout << "Pilot " << pilot->getName()
-					<< " must go to simulator." << endl;
+				pilot->goToSimulator();
 			}
 		}
 	}
@@ -196,8 +195,13 @@ bool CFlightCompany::addPlane(const CPlane& plane)
 		}
 	}
 
-	// Add the plane (create a copy)
-	planes[planeCount] = new CPlane(plane);
+	// Add the plane (create a proper polymorphic copy)
+	if (const CCargo* cargo = dynamic_cast<const CCargo*>(&plane)) {
+		planes[planeCount] = new CCargo(*cargo);  // Create CCargo copy
+	} else {
+		planes[planeCount] = new CPlane(plane);   // Create CPlane copy
+	}
+	
 	planeCount++;
 	return true;
 }
@@ -249,7 +253,7 @@ void CFlightCompany::print(ostream& os) const
 	os << "There are " << crewCount << " Crew members:" << endl;
 	for (int i = 0; i < crewCount; i++) {
 		if (crewMembers[i] != nullptr) {
-			crewMembers[i]->print(); // This outputs directly to cout
+			crewMembers[i]->print(); // This still outputs directly to cout
 		}
 	}
 
@@ -257,7 +261,7 @@ void CFlightCompany::print(ostream& os) const
 	os << "There are " << planeCount << " Planes:" << endl;
 	for (int i = 0; i < planeCount; i++) {
 		if (planes[i] != nullptr) {
-			planes[i]->print(); // This outputs directly to cout
+			os << *planes[i]; // This will now use the correct virtual print method
 		}
 	}
 
@@ -265,7 +269,7 @@ void CFlightCompany::print(ostream& os) const
 	os << "There are " << flightCount << " Flights:" << endl;
 	for (int i = 0; i < flightCount; i++) {
 		if (flights[i] != nullptr) {
-			flights[i]->print(); // This outputs directly to cout
+			flights[i]->print(); // This still outputs directly to cout
 		}
 	}
 }

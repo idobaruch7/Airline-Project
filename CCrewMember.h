@@ -53,6 +53,9 @@ public:
     bool operator+=(const int updatedAirMinutes);
 
     CCrewMember& operator=(const CCrewMember& other);
+
+    // Make a virtual method for updating time
+    virtual bool updateTime(int minutes);
 };
 
 

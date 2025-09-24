@@ -96,7 +96,14 @@ CCrewMember& CCrewMember::operator=(const CCrewMember& other)
     return *this; // allow chaining
 }
 
+// Virtual method implementation
+bool CCrewMember::updateTime(int minutes)
+{
+    return updateMinutes(minutes);
+}
+
+// Modify the += operator to use the virtual method
 bool CCrewMember::operator+=(const int updatedAirMinutes)
 {
-    return updateMinutes(updatedAirMinutes);
+    return updateTime(updatedAirMinutes);
 }

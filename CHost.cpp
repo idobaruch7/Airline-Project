@@ -53,13 +53,13 @@ void CHost::print() const
     cout << "Host " << name << " minutes " << airTime << " Type: ";
     switch (hostType) {
         case eRegular:
-            cout << "Regular";
+            cout << "Regular ";
             break;
         case eSuper:
-            cout << "Super";
+            cout << "Super ";
             break;
         case eCalcelan:
-            cout << "Calcelan";
+            cout << "Calcelan ";
             break;
     }
     cout << endl;

@@ -1,6 +1,7 @@
 #include "CPlane.h"
 #include <iostream>
 #include <string>
+#include "CCargo.h"
 
 using namespace std;
 
@@ -80,9 +81,9 @@ bool CPlane::isEqual(const CPlane& other) const
 	return  serialNumber == other.serialNumber;
 }
 
-void CPlane::print() const
+void CPlane::print(ostream& os) const
 {
-	cout << "Plane " << serialNumber
+	os << "Plane " << serialNumber
 		<< " degem " << modelName
 		<< " seats " << seatCount << endl;
 }
@@ -90,8 +91,8 @@ void CPlane::print() const
 //Operations Functions
 ostream& operator<<(ostream& os, const CPlane& plane)
 {
-	os << "Plane " << plane.serialNumber << " degem " << plane.modelName << " seats " << plane.seatCount << endl;
-	return os;
+    plane.print(os);  // Pass the ostream to the virtual print method
+    return os;
 }
 
 

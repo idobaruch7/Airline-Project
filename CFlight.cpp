@@ -185,11 +185,10 @@ CFlight& CFlight::operator=(const CFlight& other)
 // REQUIRED OPERATORS - Adding the missing ones:
 
 // Operator + for adding crew members
-CFlight CFlight::operator+(CCrewMember* member) const
+CFlight& CFlight::operator+(CCrewMember* member)
 {
-    CFlight result(*this);
-    result.addCrewMember(member);
-    return result;
+    addCrewMember(member);
+    return *this;
 }
 
 // Operator == for comparison based on all flight parameters
@@ -301,3 +300,54 @@ void CFlight::print() const
 	}
 }
 
+bool CFlight::takeOff()
+{
+    //זמן טיסה 
+    int minutes = flightInfo.getFlightTimeMinutes();
+    // חייב להיות מטוס משובץ
+    if (!assignedPlane)
+        return false;
+
+    // ספר טייסים ודיילים בכירים
+    int pilots = 0;
+    int seniorHosts = 0;
+
+    for (int i = 0; i < crewCount; ++i) {
+        if (!crewMembers[i]) continue;
+
+        if (dynamic_cast<CPilot*>(crewMembers[i])) {
+            ++pilots;
+        }
+        else if (CHost* h = dynamic_cast<CHost*>(crewMembers[i])) {
+            // עדכן לפי שם הגטר שלך לטיפוס הדייל/ת
+            if (h->getHostType() == CHost::eSuper)
+            {
+                seniorHosts++;
+
+            }
+        }
+    }
+
+    CCargo* cargo = dynamic_cast<CCargo*>(assignedPlane);
+
+    const bool isCargo = cargo != nullptr;
+
+    // בדיקות חוקיות לפי ההנחיות
+    if (isCargo) {
+        // טיסת מטען: לפחות טייס אחד
+        if (pilots < 1) return false;
+
+        cargo->takeOff(minutes);
+    }
+    else {
+        // טיסת נוסעים: בדיוק שני טייסים, ואם יש דייל בכיר – לכל היותר אחד
+        if (pilots != 1) return false;
+        if (seniorHosts > 1) return false;
+    }
+
+    for (int i = 0; i < crewCount; ++i)
+        if (crewMembers[i]) crewMembers[i]->updateMinutes(minutes);
+
+
+    return true;
+}

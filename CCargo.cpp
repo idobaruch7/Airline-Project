@@ -117,6 +117,24 @@ bool CCargo::load(float weightKg, float volume)
     return true;
 }
 
+//Takeoff
+void CCargo::takeOff(int minutes) const
+{
+    std::cout << "Need to add " << minutes << " to my log book" << std::endl;
+}
+
+
+void CCargo::print(ostream& os) const
+{
+    os << "Plane " << getSerialNumber()
+       << " degem " << getModelName()
+       << " seats " << getSeatCount() << endl
+       << "Cargo M_vol " << maxCargoVolume
+       << " M_Kg " << maxCargoWeightKg
+       << " C_vol " << currCargoVolume
+       << " C_Kg " << currCargoWeightKg
+       << endl;
+}
 
 //destructor
 CCargo::~CCargo() {

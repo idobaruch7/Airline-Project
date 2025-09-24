@@ -54,10 +54,11 @@ public:
 
     // Utility methods
     void print() const;                             // Print flight details
+    bool takeOff();
 
     // Operators
     CFlight& operator=(const CFlight& other);       // Assignment operator
     friend ostream& operator<<(ostream& os, const CFlight& flight); // Output operator
-    CFlight operator+(CCrewMember* member) const;  // Add crew member operator
+    CFlight& operator+(CCrewMember* member);  // Add crew member operator
     bool operator==(const CFlight& other) const;         // Comparison operator
 };

@@ -7,9 +7,6 @@ using namespace std;
 class CCargo : public CPlane
 {
 private:
-    int         serialNumber;        // מספר סידורי
-    string      modelName;           // שם דגם (למשל "AirBus 403")
-    int         seats;               // מספר מושבים לאנשי צוות
 
     float       maxCargoWeightKg;    // משקל מקסימלי למטען [ק"ג]
     float       maxCargoVolume;    // נפח מקסימלי למטען [מ"ק]
@@ -40,6 +37,8 @@ public:
     // --- טעינת מטען ---
     bool load(float weightKg, float volume);
 
+    void takeOff(int minutes) const;
+
     // --- גטרים ---
     float getMaxCargoWeightKg()   const;
     float getMaxCargoVolume()   const;
@@ -56,6 +55,10 @@ public:
 
     // --- בדיקות ועזר ---
     bool canLoad(float weightKg, float volumeM3) const;
-    void print();
 
+    // --- אופרטורים ---
+    friend ostream& operator<<(ostream& os, const CCargo& cargo);
+
+    // Override the virtual print method
+    virtual void print(ostream& os = cout) const override;
 };

@@ -41,5 +41,11 @@ public:
 
     // Assignment operator
     CPilot& operator=(const CPilot& other);
+
+    // Override the += operator from CCrewMember
+    CPilot& operator+=(const int flightTimeMinutes);
+
+    // Override the virtual updateTime method
+    virtual bool updateTime(int minutes) override;
 };
 

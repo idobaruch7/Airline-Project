@@ -68,7 +68,7 @@ void CPilot::receivePresent() const
 
 void CPilot::receiveUniform() const
 {
-    cout << name << " this is the fifth time I get a new uniform – this is a waste of money!" << endl;
+    cout << name << " this is the fifth time I get a new uniform, this is a waste of money!" << endl;
 }
 
 void CPilot::updateFlightTime(int flightTimeMinutes)
@@ -112,14 +112,18 @@ bool CPilot::isEqual(const CCrewMember& other) const
 void CPilot::print() const
 {
     cout << "Pilot " << name << " minutes " << airTime;
-    if (isCaptain) {
-        cout << " (Captain)";
-    }
     if (hasAddress()) {
         cout << " Address: ";
         address->print();
     } else {
         cout << " No address" << endl;
+    }
+    if (isCaptain) {
+        cout << " Captain\n";
+    }
+    else
+    {
+        cout << " Not a Captain\n";
     }
 }
 
@@ -164,4 +168,11 @@ CPilot& CPilot::operator=(const CPilot& other)
         }
     }
     return *this;
+}
+
+// Override the virtual updateTime method to use updateFlightTime
+bool CPilot::updateTime(int minutes)
+{
+    updateFlightTime(minutes); // This includes captain bonus logic
+    return true;
 }

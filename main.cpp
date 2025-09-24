@@ -140,7 +140,7 @@ int main()
 		}
 
 		cout << "******** Take off *********" << endl;
-		//if (!pF2->takeOff())
+		if (!pF2->takeOff())
 			cout << "error in take of flight 706" << endl;
 
 	}
@@ -155,7 +155,7 @@ int main()
 			*pF2 + pCmTemp;
 		}
 		cout << "******** Take off *********" << endl;
-		//if (!pF2->takeOff())
+		if (!pF2->takeOff())
 			cout << "error in take of flight 343" << endl;
 
 	}

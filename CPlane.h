@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <iostream>
 
 using namespace std;
 
@@ -35,7 +36,7 @@ public:
 	int getSeatCount() const;
 
 	bool isEqual(const CPlane& other) const;
-	virtual void print() const;
+	virtual void print(ostream& os = std::cout) const;
 
 	// Destructor
 	virtual ~CPlane();
