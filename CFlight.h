@@ -6,11 +6,11 @@
 
 using namespace std;
 
-const int MAX_CREW = 10; // Maximum crew members per flight
-
 class CFlight
 {
 private:
+    static constexpr int MAX_CREW = 10; // Use constexpr for compile-time constant
+    
     CFlightInfo flightInfo;        // The flight's data (contained by value)
     CPlane* assignedPlane;         // Pointer to assigned plane (can be nullptr initially)
     CCrewMember* crewMembers[MAX_CREW]; // Array of pointers to crew members
