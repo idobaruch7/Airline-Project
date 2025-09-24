@@ -300,3 +300,4 @@ void CFlight::print() const
 		}
 	}
 }
+

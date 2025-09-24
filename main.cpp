@@ -18,7 +18,7 @@ const int CM_COUNT = 5;
 const int PLANE_COUNT = 4;
 const int FLIGHT_COUNT = 4;
 
-void main()
+int main()
 {
 	CFlightCompany Delta("Delta");
 	CAddress ad1(34, "DZ");
@@ -140,7 +140,7 @@ void main()
 		}
 
 		cout << "******** Take off *********" << endl;
-		if (!pF2->takeOff())
+		//if (!pF2->takeOff())
 			cout << "error in take of flight 706" << endl;
 
 	}
@@ -155,7 +155,7 @@ void main()
 			*pF2 + pCmTemp;
 		}
 		cout << "******** Take off *********" << endl;
-		if (!pF2->takeOff())
+		//if (!pF2->takeOff())
 			cout << "error in take of flight 343" << endl;
 
 	}

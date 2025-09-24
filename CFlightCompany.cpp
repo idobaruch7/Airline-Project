@@ -1,5 +1,7 @@
 #include "CFlightCompany.h"
 #include <iostream>
+#include "CPilot.h"
+#include "CHost.h"
 
 using namespace std;
 
@@ -23,11 +25,55 @@ void CFlightCompany::initializeArrays()
 	}
 }
 
+//Helper Function For Calling Pilots To Simulator
+void CFlightCompany::pilotsToSimulator() const
+{
+	for (int i = 0; i < crewCount; ++i) {
+		if (crewMembers[i] != nullptr) {
+			CPilot* pilot = dynamic_cast<CPilot*>(crewMembers[i]);
+			if (pilot != nullptr) {
+				cout << "Pilot " << pilot->getName()
+					<< " must go to simulator." << endl;
+			}
+		}
+	}
+}
+
+//Crew Presents
+void CFlightCompany::crewGetPresent() const {
+	for (int i = 0; i < crewCount; i++) {
+		if (crewMembers[i] != nullptr) {
+			crewMembers[i]->receivePresent(); // קריאה פולימורפית
+		}
+	}
+}
+
+// Crew Unifroms
+void CFlightCompany::crewGetUniform() const
+{
+	for (int i = 0; i < crewCount; ++i) {
+		if (crewMembers[i]) {
+			crewMembers[i]->receiveUniform();   // קריאה פולימורפית
+		}
+	}
+}
+
+//Helper function to return counter for cargo
+int CFlightCompany::getCargoCount()
+{
+	int cnt = 0;
+	for (int i = 0; i < planeCount; ++i) {
+		if (planes[i] && dynamic_cast<CCargo*>(planes[i]) != nullptr)
+			++cnt;
+	}
+	return cnt;
+}
+
 // Helper function to find flight by flight number
-CFlight* CFlightCompany::getFlightByNumber(int flightNumber)
+CFlight* CFlightCompany::getFlightByNum(int flightNumber)
 {
 	for (int i = 0; i < flightCount; i++) {
-		if (flights[i] != nullptr && 
+		if (flights[i] != nullptr &&
 			flights[i]->getFlightInfo().getFlightNumber() == flightNumber) {
 			return flights[i];
 		}
@@ -35,17 +81,13 @@ CFlight* CFlightCompany::getFlightByNumber(int flightNumber)
 	return nullptr; // Flight not found
 }
 
-// Helper function to find crew member by employee number
-CCrewMember* CFlightCompany::getCrewMemberByNumber(int employeeNumber)
+// Helper function to find crew member by index
+CCrewMember* CFlightCompany::getCrewMember(const int index)
 {
-	// Search through all crew members to find one with matching member number
-	for (int i = 0; i < crewCount; i++) {
-		if (crewMembers[i] != nullptr && 
-			crewMembers[i]->getMember() == employeeNumber) {
-			return crewMembers[i];
-		}
-	}
-	return nullptr; // Crew member not found
+	if (index < 0 || index >= crewCount)
+		return nullptr;
+
+	return crewMembers[index];
 }
 
 CFlightCompany::CFlightCompany(const string& name)
@@ -53,13 +95,13 @@ CFlightCompany::CFlightCompany(const string& name)
 {
 	// Initialize pointer arrays to nullptr
 	initializeArrays();
-	
+
 	setName(name);
 }
 
 CFlightCompany::CFlightCompany(const CFlightCompany& other)
-	: companyName(other.companyName), crewCount(other.crewCount), 
-	  planeCount(other.planeCount), flightCount(other.flightCount)
+	: companyName(other.companyName), crewCount(other.crewCount),
+	planeCount(other.planeCount), flightCount(other.flightCount)
 {
 	// Initialize all arrays to nullptr first
 	initializeArrays();
@@ -67,17 +109,27 @@ CFlightCompany::CFlightCompany(const CFlightCompany& other)
 	// Copy crew members (create new copies)
 	for (int i = 0; i < crewCount; i++) {
 		if (other.crewMembers[i] != nullptr) {
-			crewMembers[i] = new CCrewMember(*other.crewMembers[i]);
+			// Check if it's a pilot or host and create the appropriate object
+			if (const CPilot* pilot = dynamic_cast<const CPilot*>(other.crewMembers[i])) {
+				crewMembers[i] = new CPilot(*pilot);
+			}
+			else if (const CHost* host = dynamic_cast<const CHost*>(other.crewMembers[i])) {
+				crewMembers[i] = new CHost(*host);
+			}
+			else {
+				// This shouldn't happen if all crew members are either pilots or hosts
+				crewMembers[i] = nullptr;
+			}
 		}
 	}
-	
+
 	// Copy planes (create new copies)
 	for (int i = 0; i < planeCount; i++) {
 		if (other.planes[i] != nullptr) {
 			planes[i] = new CPlane(*other.planes[i]);
 		}
 	}
-	
+
 	// Copy flights (create new copies)
 	for (int i = 0; i < flightCount; i++) {
 		if (other.flights[i] != nullptr) {
@@ -105,16 +157,27 @@ bool CFlightCompany::addCrewMember(const CCrewMember& member)
 	if (crewCount >= MAX_CREWS) {
 		return false;
 	}
-	
+
 	// Check if crew member already exists in the company
 	for (int i = 0; i < crewCount; i++) {
 		if (crewMembers[i] != nullptr && *crewMembers[i] == (member)) {
 			return false; // Crew member already exists
 		}
 	}
-	
+
 	// Add the crew member (create a copy)
-	crewMembers[crewCount] = new CCrewMember(member);
+
+
+	if (const CPilot* p = dynamic_cast<const CPilot*>(&member)) {
+		crewMembers[crewCount] = new CPilot(*p);
+	}
+	else if (const CHost* h = dynamic_cast<const CHost*>(&member)) {
+		crewMembers[crewCount] = new CHost(*h);
+	}
+	else {
+		return false;
+	}
+
 	crewCount++;
 	return true;
 }
@@ -160,20 +223,20 @@ bool CFlightCompany::addFlight(const CFlight& flight)
 	return true;
 }
 
-bool CFlightCompany::addCrewToFlight(int flightNumber, int employeeNumber)
+bool CFlightCompany::addCrewToFlight(int flightNumber, int index)
 {
 	// Find the flight by flight number
-	CFlight* flight = getFlightByNumber(flightNumber);
+	CFlight* flight = getFlightByNum(flightNumber);
 	if (flight == nullptr) {
 		return false; // Flight not found
 	}
-	
+
 	// Find the crew member by employee number
-	CCrewMember* crewMember = getCrewMemberByNumber(employeeNumber);
+	CCrewMember* crewMember = getCrewMember(index);
 	if (crewMember == nullptr) {
 		return false; // Crew member not found
 	}
-	
+
 	// Add crew member to the flight
 	return flight->addCrewMember(crewMember);
 }
@@ -181,7 +244,7 @@ bool CFlightCompany::addCrewToFlight(int flightNumber, int employeeNumber)
 void CFlightCompany::print(ostream& os) const
 {
 	os << "Flight company: " << companyName << endl;
-	
+
 	// Print crew members
 	os << "There are " << crewCount << " Crew members:" << endl;
 	for (int i = 0; i < crewCount; i++) {
@@ -189,7 +252,7 @@ void CFlightCompany::print(ostream& os) const
 			crewMembers[i]->print(); // This outputs directly to cout
 		}
 	}
-	
+
 	// Print planes
 	os << "There are " << planeCount << " Planes:" << endl;
 	for (int i = 0; i < planeCount; i++) {
@@ -197,7 +260,7 @@ void CFlightCompany::print(ostream& os) const
 			planes[i]->print(); // This outputs directly to cout
 		}
 	}
-	
+
 	// Print flights
 	os << "There are " << flightCount << " Flights:" << endl;
 	for (int i = 0; i < flightCount; i++) {
@@ -213,12 +276,12 @@ CFlightCompany::~CFlightCompany()
 	for (int i = 0; i < crewCount; i++) {
 		delete crewMembers[i];
 	}
-	
+
 	// Clean up dynamically allocated planes
 	for (int i = 0; i < planeCount; i++) {
 		delete planes[i];
 	}
-	
+
 	// Clean up dynamically allocated flights
 	for (int i = 0; i < flightCount; i++) {
 		delete flights[i];
@@ -231,7 +294,7 @@ CPlane* CFlightCompany::getPlane(int index)
 	if (index < 0 || index >= planeCount) {
 		return nullptr; // Invalid index
 	}
-	
+
 	// Return the plane at the specified index
 	return planes[index];
 }

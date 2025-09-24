@@ -11,9 +11,11 @@ private:
 	int seatCount;
 	string modelName;
 
+protected:
 	// Helper function
 	bool isValidString(const string& str) const;
 	bool isValidPositiveInt(int value) const;
+	bool isValidPositiveFloat(float value) const;
 
 public:
 	//Default Constructor Deletion
@@ -33,10 +35,10 @@ public:
 	int getSeatCount() const;
 
 	bool isEqual(const CPlane& other) const;
-	void print() const;
+	virtual void print() const;
 
 	// Destructor
-	~CPlane();
+	virtual ~CPlane();
 
 	//Operations
 	friend ostream& operator<<(ostream& os, const CPlane& plane); //<<

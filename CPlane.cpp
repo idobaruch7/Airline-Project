@@ -17,6 +17,11 @@ bool CPlane::isValidPositiveInt(int value) const
 	return value >= 0;
 }
 
+bool CPlane::isValidPositiveFloat(float value) const
+{
+	return value >= 0.0f;
+}
+
 // Constructor
 CPlane::CPlane(int count, const string& name)
 	:serialNumber(nextSerial++),

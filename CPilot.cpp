@@ -127,10 +127,15 @@ void CPilot::print(ostream& os) const
 {
     os << "Pilot " << name << " minutes " << airTime;
     if (isCaptain) {
-        os << " (Captain)";
+        os << " a Captain";
     }
+    else
+    {
+        os << " \nNot a Captain";
+    }
+
     if (hasAddress()) {
-        os << " Address: ";
+        os << " Home ";
         os << *address;
     } else {
         os << " No address" << endl;

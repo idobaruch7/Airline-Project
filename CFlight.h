@@ -3,6 +3,9 @@
 #include "CPlane.h"
 #include "CCrewMember.h"
 #include <iostream>
+#include "CPilot.h"
+#include "CHost.h"
+#include "CCargo.h"
 
 using namespace std;
 

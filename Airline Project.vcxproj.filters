@@ -36,13 +36,13 @@
     <ClCompile Include="CFlight.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="testCFlight.cpp">
+    <ClCompile Include="CPilot.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="testCFC.cpp">
+    <ClCompile Include="CHost.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="testCM.cpp">
+    <ClCompile Include="CCargo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -63,6 +63,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="CFlight.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CPilot.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CHost.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CCargo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

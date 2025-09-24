@@ -67,7 +67,7 @@ void CHost::print() const
 
 void CHost::print(ostream& os) const
 {
-    os << "Host " << name << " minutes " << airTime << " Type: ";
+    os << "Host ";
     switch (hostType) {
         case eRegular:
             os << "Regular";
@@ -79,7 +79,7 @@ void CHost::print(ostream& os) const
             os << "Calcelan";
             break;
     }
-    os << endl;
+    os << name << " minutes " << airTime << " Type: " << endl;
 }
 
 // Assignment operator
