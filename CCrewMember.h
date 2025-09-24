@@ -7,32 +7,24 @@
 using namespace std;
 
 class CCrewMember {
-private:
-    int member;
+protected:
     string name;
     int airTime;
-    CAddress address;
 
     bool isValidName(const string& name) const;
 
-
 public:
-    static int nextMember;
-
     //Default Constructor Deletion
     CCrewMember() = delete;
 
     // Constructor (airMinutes default = 0)
-    CCrewMember(const string& name, const CAddress& address, int airMinutes = 0);
-
-    // Constructor (no address)
     CCrewMember(const string& name, int airMinutes = 0);
 
     // Copy Constructor
     CCrewMember(const CCrewMember& other);
 
-    // Destructor
-    ~CCrewMember();
+    // Virtual Destructor
+    virtual ~CCrewMember();
 
     // Update air minutes (adds minutes; return false if invalid input)
     bool updateMinutes(int minutes);
@@ -41,24 +33,21 @@ public:
     const string& getName() const;
     void setName(const string& newName);
 
-    // Get/Set address
-    const CAddress& getAddress() const;
-    void setAddress(const CAddress& newAddress);
-
-    // Get member serial
-    int getMember() const;
-
     // Get air time
     int getAirTime() const;
 
-    // Print
-    void print() const;
+    // Pure virtual methods that derived classes must implement
+    virtual void receivePresent() const = 0;
+    virtual void receiveUniform() const = 0;
+    virtual void updateFlightTime(int flightTimeMinutes) = 0;
 
-    // Compare by name
-    bool isEqual(const CCrewMember& other) const;
+    // Virtual methods that can be overridden
+    virtual void print() const;
+    virtual void print(ostream& os) const;
+    virtual bool isEqual(const CCrewMember& other) const;
 
     //Operations
-    friend ostream& operator<<(ostream& os, const CCrewMember& flightInfo); //<<
+    friend ostream& operator<<(ostream& os, const CCrewMember& crewMember);
 
     bool operator==(const CCrewMember& other) const;
     bool operator+=(const int updatedAirMinutes);
