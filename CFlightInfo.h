@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include "CFlightCompException.h"
 
 using namespace std;
 
@@ -14,6 +15,7 @@ private:
 	// Helper functions
 	bool isValidString(const string& str) const;
 	bool isValidPositiveInt(int value) const;
+	static const int MAX_DESTINATION_LENGTH = 50;
 
 public:
 

@@ -45,18 +45,22 @@ CPlane::CPlane(const CPlane& other)
 // Setters
 void CPlane::setModelName(const string& name)
 {
-	if (isValidString(name)) {
-		modelName = name;
+	if (!isValidString(name)) {
+		throw CCompStringException("Invalid model name: cannot be empty");
 	}
-	// If invalid, don't change the model name
+	if (name.length() > MAX_MODEL_NAME_LENGTH) {
+		throw CCompStringException("Invalid model name: too long (max " + 
+			to_string(MAX_MODEL_NAME_LENGTH) + " characters)");
+	}
+	modelName = name;
 }
 
 void CPlane::setSeatCount(int count)
 {
-	if (isValidPositiveInt(count)) {
-		seatCount = count;
+	if (!isValidPositiveInt(count)) {
+		throw CCompStringException("Invalid seat count: must be non-negative");
 	}
-	// If invalid, don't change the seat count
+	seatCount = count;
 }
 
 // Getters

@@ -84,7 +84,7 @@ CFlight* CFlightCompany::getFlightByNum(int flightNumber)
 CCrewMember* CFlightCompany::getCrewMember(const int index)
 {
 	if (index < 0 || index >= crewCount)
-		return nullptr;
+		throw CCompLimitException(crewCount - 1, "crew member index");
 
 	return crewMembers[index];
 }
@@ -247,6 +247,10 @@ bool CFlightCompany::addCrewToFlight(int flightNumber, int index)
 
 void CFlightCompany::print(ostream& os) const
 {
+	if (companyName.empty()) {
+		throw CCompStringException("Company has no name");
+	}
+
 	os << "Flight company: " << companyName << endl;
 
 	// Print crew members
@@ -292,13 +296,19 @@ CFlightCompany::~CFlightCompany()
 	}
 }
 
-CPlane* CFlightCompany::getPlane(int index)
+// Replace getPlane with operator[]
+CPlane*& CFlightCompany::operator[](int index)
 {
-	// Validate index bounds
 	if (index < 0 || index >= planeCount) {
-		return nullptr; // Invalid index
+		throw CCompLimitException(planeCount - 1, "plane index");
 	}
+	return planes[index];
+}
 
-	// Return the plane at the specified index
+const CPlane* CFlightCompany::operator[](int index) const
+{
+	if (index < 0 || index >= planeCount) {
+		throw CCompLimitException(planeCount - 1, "plane index");
+	}
 	return planes[index];
 }

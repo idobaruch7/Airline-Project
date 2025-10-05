@@ -5,6 +5,7 @@
 #include "CPlane.h"
 #include "CFlight.h"
 #include "CCargo.h"
+#include "CFlightCompException.h"
 
 using namespace std;
 
@@ -53,7 +54,9 @@ public:
 	CFlight* getFlightByNum(int flightNumber);
 	CCrewMember* getCrewMember(const int index);
 
-	CPlane* getPlane(int index);
+	// Replace getPlane with operator[]
+	CPlane*& operator[](int index);              // For modification
+	const CPlane* operator[](int index) const;   // For const access
 
 	void print(ostream& os) const;
 

@@ -304,9 +304,11 @@ bool CFlight::takeOff()
 {
     //זמן טיסה 
     int minutes = flightInfo.getFlightTimeMinutes();
+    
     // חייב להיות מטוס משובץ
-    if (!assignedPlane)
-        return false;
+    if (!assignedPlane) {
+        throw CCompStringException("Cannot take off: No plane assigned to flight");
+    }
 
     // ספר טייסים ודיילים בכירים
     int pilots = 0;
@@ -323,31 +325,42 @@ bool CFlight::takeOff()
             if (h->getHostType() == CHost::eSuper)
             {
                 seniorHosts++;
-
             }
         }
     }
 
     CCargo* cargo = dynamic_cast<CCargo*>(assignedPlane);
-
     const bool isCargo = cargo != nullptr;
 
     // בדיקות חוקיות לפי ההנחיות
     if (isCargo) {
         // טיסת מטען: לפחות טייס אחד
-        if (pilots < 1) return false;
-
+        if (pilots < 1) {
+            throw CCompStringException("Cannot take off: Cargo flight requires at least 1 pilot");
+        }
         cargo->takeOff(minutes);
     }
     else {
         // טיסת נוסעים: בדיוק שני טייסים, ואם יש דייל בכיר – לכל היותר אחד
-        if (pilots != 1) return false;
-        if (seniorHosts > 1) return false;
+        if (pilots != 1) {
+            throw CCompStringException("Cannot take off: Passenger flight requires exactly 1 pilot");
+        }
+        if (seniorHosts > 1) {
+            throw CCompStringException("Cannot take off: Passenger flight cannot have more than 1 senior host");
+        }
     }
 
-    for (int i = 0; i < crewCount; ++i)
-        if (crewMembers[i]) crewMembers[i]->updateMinutes(minutes);
-
+    // Handle air time for crew members
+    for (int i = 0; i < crewCount; ++i) {
+        if (crewMembers[i]) {
+            try {
+                crewMembers[i]->updateMinutes(minutes);
+            }
+            catch (...) {
+                throw CCompStringException("Error updating crew member air time");
+            }
+        }
+    }
 
     return true;
 }

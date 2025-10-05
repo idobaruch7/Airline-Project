@@ -1,67 +1,54 @@
 #include "CCargo.h"
 #include <iostream>
-#include <string>
 
 using namespace std;
 
-//Constructor
-CCargo::CCargo(int seatCount,
-    const string& modelName,
-    float maxCargoWeightKg,
-    float maxCargoVolume,
-    float currCargoWeightKg,
-    float currCargoVolume)
-    : CPlane(seatCount, modelName),       
-    maxCargoWeightKg(max(0.0f, maxCargoWeightKg)),
-    maxCargoVolume(max(0.0f, maxCargoVolume)),
-    currCargoWeightKg(max(0.0f, currCargoWeightKg)),
-    currCargoVolume(max(0.0f, currCargoVolume))
+CCargo::CCargo(int seatCount, const string& modelName, float maxCargoWeightKg, float maxCargoVolume, float currCargoWeightKg, float currCargoVolume)
+    : CPlane(seatCount, modelName), 
+      maxCargoWeightKg(0.0f), maxCargoVolume(0.0f), currCargoWeightKg(0.0f), currCargoVolume(0.0f)
 {
     setMaxCargoWeightKg(maxCargoWeightKg);
     setMaxCargoVolume(maxCargoVolume);
-    setCurrCargoVolume(currCargoVolume);
     setCurrCargoWeightKg(currCargoWeightKg);
+    setCurrCargoVolume(currCargoVolume);
 }
 
-//Copy Constructor
 CCargo::CCargo(const CCargo& other)
-    : CPlane(other),   // מפעיל את copy constructor של CPlane
-    maxCargoWeightKg(other.maxCargoWeightKg),
-    maxCargoVolume(other.maxCargoVolume),
-    currCargoWeightKg(other.currCargoWeightKg),
-    currCargoVolume(other.currCargoVolume)
+    : CPlane(other),
+      maxCargoWeightKg(other.maxCargoWeightKg),
+      maxCargoVolume(other.maxCargoVolume),
+      currCargoWeightKg(other.currCargoWeightKg),
+      currCargoVolume(other.currCargoVolume)
 {
 }
 
-
-
-//Setters
-void CCargo::setMaxCargoWeightKg(float kg)
+CCargo::~CCargo()
 {
-    if (isValidPositiveFloat(kg))
-        maxCargoWeightKg = kg;
 }
 
-void CCargo::setMaxCargoVolume(float m3)
+bool CCargo::load(float weightKg, float volume)
 {
-    if (isValidPositiveFloat(m3))
-        maxCargoVolume = m3;
+    if (!isValidPositiveFloat(weightKg) || !isValidPositiveFloat(volume)) {
+        return false;
+    }
+
+    if (!canLoad(weightKg, volume)) {
+        return false;
+    }
+
+    currCargoWeightKg += weightKg;
+    currCargoVolume += volume;
+    return true;
 }
 
-void CCargo::setCurrCargoWeightKg(float kg)
+void CCargo::takeOff(int minutes) const
 {
-    if (isValidPositiveFloat(kg))
-        currCargoWeightKg = kg;
+    cout << "Cargo plane " << getSerialNumber()
+         << " is taking off for " << minutes << " minutes with "
+         << currCargoWeightKg << " kg cargo" << endl;
 }
 
-void CCargo::setCurrCargoVolume(float m3)
-{
-    if (isValidPositiveFloat(m3))
-        currCargoVolume = m3;
-}
-
-//Getters
-
+// Getters
 float CCargo::getMaxCargoWeightKg() const
 {
     return maxCargoWeightKg;
@@ -92,51 +79,64 @@ float CCargo::getAvailableVolume() const
     return maxCargoVolume - currCargoVolume;
 }
 
-//HelperFunction for load
-bool CCargo::canLoad(float weightKg, float volume) const
+// Setters
+void CCargo::setMaxCargoWeightKg(float kg)
 {
-    if (weightKg < 0.0f || volume < 0.0f)
-        return false;
-
-    if (currCargoWeightKg + weightKg > maxCargoWeightKg)
-        return false;
-
-    if (currCargoVolume + volume > maxCargoVolume)
-        return false;
-
-    return true;
+    if (!isValidPositiveFloat(kg)) {
+        throw CCompStringException("Invalid max cargo weight: must be non-negative");
+    }
+    maxCargoWeightKg = kg;
 }
 
-bool CCargo::load(float weightKg, float volume)
+void CCargo::setMaxCargoVolume(float m3)
 {
-    if (!canLoad(weightKg, volume))
-        return false;
-
-    currCargoWeightKg += weightKg;
-    currCargoVolume += volume;
-    return true;
+    if (!isValidPositiveFloat(m3)) {
+        throw CCompStringException("Invalid max cargo volume: must be non-negative");
+    }
+    maxCargoVolume = m3;
 }
 
-//Takeoff
-void CCargo::takeOff(int minutes) const
+void CCargo::setCurrCargoWeightKg(float kg)
 {
-    std::cout << "Need to add " << minutes << " to my log book" << std::endl;
+    if (!isValidPositiveFloat(kg)) {
+        throw CCompStringException("Invalid current cargo weight: must be non-negative");
+    }
+    if (kg > maxCargoWeightKg) {
+        throw CCompStringException("Current cargo weight cannot exceed maximum weight");
+    }
+    currCargoWeightKg = kg;
 }
 
+void CCargo::setCurrCargoVolume(float m3)
+{
+    if (!isValidPositiveFloat(m3)) {
+        throw CCompStringException("Invalid current cargo volume: must be non-negative");
+    }
+    if (m3 > maxCargoVolume) {
+        throw CCompStringException("Current cargo volume cannot exceed maximum volume");
+    }
+    currCargoVolume = m3;
+}
+
+bool CCargo::canLoad(float weightKg, float volumeM3) const
+{
+    return (currCargoWeightKg + weightKg <= maxCargoWeightKg) &&
+           (currCargoVolume + volumeM3 <= maxCargoVolume);
+}
+
+ostream& operator<<(ostream& os, const CCargo& cargo)
+{
+    cargo.print(os);
+    return os;
+}
 
 void CCargo::print(ostream& os) const
 {
-    os << "Plane " << getSerialNumber()
+    os << "Cargo Plane " << getSerialNumber()
        << " degem " << getModelName()
-       << " seats " << getSeatCount() << endl
-       << "Cargo M_vol " << maxCargoVolume
-       << " M_Kg " << maxCargoWeightKg
-       << " C_vol " << currCargoVolume
-       << " C_Kg " << currCargoWeightKg
-       << endl;
-}
-
-//destructor
-CCargo::~CCargo() {
-
+       << " seats " << getSeatCount()
+       << " max cargo weight " << maxCargoWeightKg << " kg"
+       << " max cargo volume " << maxCargoVolume << " m3"
+       << " current cargo weight " << currCargoWeightKg << " kg"
+       << " current cargo volume " << currCargoVolume << " m3" << endl;
 }

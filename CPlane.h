@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <iostream>
+#include "CFlightCompException.h"
 
 using namespace std;
 
@@ -11,6 +12,8 @@ private:
 	int serialNumber;
 	int seatCount;
 	string modelName;
+
+	static const int MAX_MODEL_NAME_LENGTH = 30;
 
 protected:
 	// Helper function

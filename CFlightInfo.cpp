@@ -38,34 +38,38 @@ CFlightInfo::CFlightInfo(const CFlightInfo& other)
 // Setters
 void CFlightInfo::setFlightNumber(int number)
 {
-	if (isValidPositiveInt(number)) {
-		flightNumber = number;
+	if (!isValidPositiveInt(number)) {
+		throw CCompStringException("Invalid flight number: must be non-negative");
 	}
-	// If invalid, don't change the flight number
+	flightNumber = number;
 }
 
 void CFlightInfo::setDest(const string& dest)
 {
-	if (isValidString(dest)) {
-		destination = dest;
+	if (!isValidString(dest)) {
+		throw CCompStringException("Invalid destination: cannot be empty");
 	}
-	// If invalid, don't change the destination
+	if (dest.length() > MAX_DESTINATION_LENGTH) {
+		throw CCompStringException("Invalid destination: too long (max " + 
+			to_string(MAX_DESTINATION_LENGTH) + " characters)");
+	}
+	destination = dest;
 }
 
 void CFlightInfo::setFlightTimeMinutes(int timeMinutes)
 {
-	if (isValidPositiveInt(timeMinutes)) {
-		flightTimeMinutes = timeMinutes;
+	if (!isValidPositiveInt(timeMinutes)) {
+		throw CCompStringException("Invalid flight time: must be non-negative");
 	}
-	// If invalid, don't change the flight time
+	flightTimeMinutes = timeMinutes;
 }
 
 void CFlightInfo::setDistanceKM(int distance)
 {
-	if (isValidPositiveInt(distance)) {
-		distanceKM = distance;
+	if (!isValidPositiveInt(distance)) {
+		throw CCompStringException("Invalid distance: must be non-negative");
 	}
-	// If invalid, don't change the distance
+	distanceKM = distance;
 }
 
 // Getters
