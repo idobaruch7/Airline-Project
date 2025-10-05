@@ -36,6 +36,7 @@ private:
 public:
 	CFlightCompany(const string& name);
 	CFlightCompany(const CFlightCompany& other);
+	CFlightCompany(const string& fileName, int noUse);
 
 	CFlightCompany() = delete;
 

@@ -13,7 +13,7 @@ using namespace std;
 #include "CCargo.h"
 #include "CHost.h"
 #include "CFlightCompException.h"
-// #include "CPlaneCrewFactory.h"
+#include "CPlaneCrewFactory.h"
 
 //const int CM_COUNT = 5;
 //const int PLANE_COUNT = 4;

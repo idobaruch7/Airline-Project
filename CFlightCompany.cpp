@@ -2,6 +2,8 @@
 #include <iostream>
 #include "CPilot.h"
 #include "CHost.h"
+#include <fstream>
+#include "CPlaneCrewFactory.h"
 
 using namespace std;
 
@@ -311,4 +313,87 @@ const CPlane* CFlightCompany::operator[](int index) const
 		throw CCompLimitException(planeCount - 1, "plane index");
 	}
 	return planes[index];
+}
+
+
+
+
+
+
+
+// Constructor that reads company data from a file
+CFlightCompany::CFlightCompany(const string& fileName, int noUse)
+	: companyName(""), crewCount(0), planeCount(0), flightCount(0)
+{
+	initializeArrays();
+
+	ifstream inFile(fileName);
+	if (!inFile.is_open()) {
+		throw CCompFileException(fileName);
+	}
+
+	// Read company name from first line
+	string compName;
+	getline(inFile, compName);
+	setName(compName);
+
+	// Read and create crew members
+	int numCrew;
+	inFile >> numCrew;
+	for (int i = 0; i < numCrew && i < MAX_CREWS; i++) {
+		crewMembers[crewCount] = CPlaneCrewFactory::GetCrewMemberFromFile(inFile);
+		if (crewMembers[crewCount]) crewCount++;
+	}
+
+	// Read and create planes
+	int numPlanes;
+	inFile >> numPlanes;
+	for (int i = 0; i < numPlanes && i < MAX_PLANES; i++) {
+		planes[planeCount] = CPlaneCrewFactory::GetPlaneFromFile(inFile);
+		if (planes[planeCount]) planeCount++;
+	}
+
+	// Read and create flights
+	int numFlights;
+	inFile >> numFlights;
+	for (int i = 0; i < numFlights && i < MAX_FLIGHT; i++) {
+		// Read flight information
+		string destination;
+		int flightNumber, minutes, km, hasPlane;
+		inFile >> destination >> flightNumber >> minutes >> km >> hasPlane;
+
+		// Create flight with or without plane assignment
+		CFlightInfo flightInfo(destination, flightNumber, minutes, km);
+		CFlight* flight = nullptr;
+
+		if (hasPlane == 1) {
+			int planeIndex;
+			inFile >> planeIndex;
+			flight = new CFlight(flightInfo, (planeIndex >= 0 && planeIndex < planeCount) ? planes[planeIndex] : nullptr);
+		}
+		else {
+			flight = new CFlight(flightInfo);
+		}
+
+		// Read crew members for this flight
+		int flightCrewCount;
+		inFile >> flightCrewCount;
+		for (int j = 0; j < flightCrewCount; j++) {
+			CCrewMember* tempCrew = CPlaneCrewFactory::GetCrewMemberFromFile(inFile);
+			if (tempCrew) {
+				// Match with existing company crew members
+				for (int k = 0; k < crewCount; k++) {
+					if (crewMembers[k] && *crewMembers[k] == *tempCrew) {
+						flight->addCrewMember(crewMembers[k]);
+						break;
+					}
+				}
+				delete tempCrew; // Clean up temporary crew member
+			}
+		}
+
+		flights[flightCount++] = flight;
+	}
+
+	inFile.close();
 }
