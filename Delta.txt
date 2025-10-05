@@ -1,0 +1,14 @@
+FFF
+3
+0 ieie 20 2
+1 lala 20 0 1
+0 KAKKA 20 1
+2
+0 103 100 popo 20
+0 103 101 boing 30
+1
+Paris 343 320 5000 1 0
+3
+0 ieie 20 2
+1 lala 20 0 1
+0 KAKKA 20 1

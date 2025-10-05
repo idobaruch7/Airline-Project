@@ -152,6 +152,11 @@ const string& CFlightCompany::getName() const
 	return companyName;
 }
 
+int CFlightCompany::getCrewCount() const
+{
+	return crewCount;
+}
+
 bool CFlightCompany::addCrewMember(const CCrewMember& member)
 {
 	// Check if we've reached maximum capacity
@@ -299,23 +304,27 @@ CFlightCompany::~CFlightCompany()
 }
 
 // Replace getPlane with operator[]
-CPlane*& CFlightCompany::operator[](int index)
+CPlane& CFlightCompany::operator[](int index)
 {
 	if (index < 0 || index >= planeCount) {
 		throw CCompLimitException(planeCount - 1, "plane index");
 	}
-	return planes[index];
+	if (planes[index] == nullptr) {
+		throw CCompLimitException(planeCount - 1, "plane at index is null");
+	}
+	return *planes[index];
 }
 
-const CPlane* CFlightCompany::operator[](int index) const
+const CPlane& CFlightCompany::operator[](int index) const
 {
 	if (index < 0 || index >= planeCount) {
 		throw CCompLimitException(planeCount - 1, "plane index");
 	}
-	return planes[index];
+	if (planes[index] == nullptr) {
+		throw CCompLimitException(planeCount - 1, "plane at index is null");
+	}
+	return *planes[index];
 }
-
-
 
 
 
@@ -331,6 +340,26 @@ CFlightCompany::CFlightCompany(const string& fileName, int noUse)
 	if (!inFile.is_open()) {
 		throw CCompFileException(fileName);
 	}
+
+	// Check if file is empty
+	inFile.seekg(0, ios::end);
+	if (inFile.tellg() == 0) {
+		inFile.close();
+		cout << "File " << fileName << " is empty. Please enter company data manually." << endl;
+		
+		// Get company name from user
+		string compName;
+		cout << "Enter company name: ";
+		getline(cin, compName);
+		setName(compName);
+		
+		// Get data from user using the factory method
+		CPlaneCrewFactory::GetCompanyDataFromUser(*this);
+		return;
+	}
+
+	// Reset file position to beginning for normal reading
+	inFile.seekg(0, ios::beg);
 
 	// Read company name from first line
 	string compName;
@@ -396,4 +425,117 @@ CFlightCompany::CFlightCompany(const string& fileName, int noUse)
 	}
 
 	inFile.close();
+}
+
+
+// Saves company data to file
+void CFlightCompany::saveToFile(const string& fileName) const
+{
+	ofstream outFile(fileName);
+	if (!outFile.is_open()) {
+		throw CCompFileException(fileName);
+	}
+
+	// Write company name
+	outFile << companyName << endl;
+
+	// Write crew members
+	outFile << crewCount << endl;
+	for (int i = 0; i < crewCount; i++) {
+		CCrewMember* crew = crewMembers[i];
+		CrewType type = CPlaneCrewFactory::GetCrewType(crew);
+		outFile << type << " " << crew->getName() << " " << crew->getAirTime() << " ";
+
+		if (type == eHost) {
+			CHost* host = dynamic_cast<CHost*>(crew);
+			outFile << host->getHostType() << endl;
+		}
+		else if (type == ePilot) {
+			CPilot* pilot = dynamic_cast<CPilot*>(crew);
+			if (pilot->hasAddress()) {
+				CAddress* addr = pilot->getAddress();
+				outFile << "1 " << addr->getHouseNumber() << " "
+					<< addr->getStreet() << " " << addr->getCity() << " ";
+			}
+			else {
+				outFile << "0 ";
+			}
+			outFile << (pilot->getIsCaptain() ? 1 : 0) << endl;
+		}
+	}
+
+	// Write planes
+	outFile << planeCount << endl;
+	for (int i = 0; i < planeCount; i++) {
+		CPlane* plane = planes[i];
+		PlaneType type = CPlaneCrewFactory::GetPlaneType(plane);
+		outFile << type << " ";
+
+		if (type == eRegular) {
+			// Write: type lastSerial currentSerial modelName seats
+			outFile << CPlane::nextSerial << " "
+				<< plane->getSerialNumber() << " "
+				<< plane->getModelName() << " " << plane->getSeatCount() << endl;
+		}
+		else if (type == eCargo) {
+			CCargo* cargo = dynamic_cast<CCargo*>(plane);
+			outFile << cargo->getSerialNumber() << " " << cargo->getModelName() << " "
+				<< cargo->getSeatCount() << endl;
+			outFile << cargo->getMaxCargoVolume() << " " << cargo->getMaxCargoWeightKg() << " "
+				<< cargo->getCurrCargoVolume() << " " << cargo->getCurrCargoWeightKg() << endl;
+		}
+	}
+
+	// Write flights
+	outFile << flightCount << endl;
+	for (int i = 0; i < flightCount; i++) {
+		CFlight* flight = flights[i];
+		const CFlightInfo& info = flight->getFlightInfo();
+
+		outFile << info.getDest() << " " << info.getFlightNumber() << " "
+			<< info.getFlightTimeMinutes() << " " << info.getDistanceKM() << " ";
+
+		// Check if flight has plane
+		if (flight->hasPlane()) {
+			outFile << "1 ";
+			// Find plane index
+			for (int j = 0; j < planeCount; j++) {
+				if (planes[j] == flight->getPlane()) {
+					outFile << j << endl;
+					break;
+				}
+			}
+		}
+		else {
+			outFile << "0" << endl;
+		}
+
+		// Write crew members for this flight
+		outFile << flight->getCrewCount() << endl;
+		for (int j = 0; j < flight->getCrewCount(); j++) {
+			CCrewMember* crew = flight->getCrewMember(j);
+			CrewType type = CPlaneCrewFactory::GetCrewType(crew);
+			outFile << type << " " << crew->getName() << " " << crew->getAirTime() << " ";
+
+			if (type == eHost) {
+				CHost* host = dynamic_cast<CHost*>(crew);
+				outFile << host->getHostType() << endl;
+			}
+			else if (type == ePilot) {
+				CPilot* pilot = dynamic_cast<CPilot*>(crew);
+				if (pilot->hasAddress()) {
+					CAddress* addr = pilot->getAddress();
+					outFile << "1 " << addr->getHouseNumber() << " "
+						<< addr->getStreet() << " " << addr->getCity() << " ";
+				}
+				else {
+					outFile << "0 ";
+				}
+				outFile << (pilot->getIsCaptain() ? 1 : 0) << endl;
+			}
+		}
+	}
+
+	outFile.close();
+	cout << "Company data saved to " << fileName << " successfully!" << endl;
 }

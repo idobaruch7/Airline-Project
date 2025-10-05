@@ -48,18 +48,22 @@ public:
 	bool addFlight(const CFlight& flight);
 	bool addCrewToFlight(int flightNumber, int employeeNumber);
 
+	void saveToFile(const string& fileName) const;
+
 	void crewGetUniform() const;
 	void crewGetPresent() const;
 	int getCargoCount();
 	void pilotsToSimulator() const;
 	CFlight* getFlightByNum(int flightNumber);
 	CCrewMember* getCrewMember(const int index);
+	int getCrewCount() const;
 
 	// Replace getPlane with operator[]
-	CPlane*& operator[](int index);              // For modification
-	const CPlane* operator[](int index) const;   // For const access
+	CPlane& operator[](int index);              // For modification
+	const CPlane& operator[](int index) const;   // For const access
 
 	void print(ostream& os) const;
+
 
 	~CFlightCompany();
 };

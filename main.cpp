@@ -19,7 +19,7 @@ using namespace std;
 //const int PLANE_COUNT = 4;
 //const int FLIGHT_COUNT = 4;
 
-void main()
+int main()
 {
 
 	CFlightCompany* pDelta = NULL;
@@ -36,22 +36,39 @@ void main()
 		pDelta = new CFlightCompany("Delta");
 	}
 
+	
+	
 	//Checking some of the exception put try and catch for each section	
+	try {
+		CPlane p1(-34, "AirBus");
+		CCargo c1(45, "Jumbo", -560, 200);
+		CCargo c2(45, "Jumbo", 560, -200);
+		CFlightInfo f1("London", -23, 120, 5000);
+		CFlightInfo f2("LondonVeryLong", 23, 120, 5000);
+		CFlightInfo f3("London", 23, -120, 5000);
+		CFlightInfo f4("London", 23, 120, -5000);
+		CCrewMember* pC1 = pDelta->getCrewMember(-1);
+	}
+	catch (const CFlightCompException& e) {
+		e.show();
+	}
 
-	CPlane p1(-34, "AirBus");
-	CCargo c1(45, "Jumbo", -560, 200);
-	CCargo c2(45, "Jumbo", 560, -200);
-	CFlightInfo f1("London", -23, 120, 5000);
-	CFlightInfo f2("LondonVeryLong", 23, 120, 5000);
-	CFlightInfo f3("London", 23, -120, 5000);
-	CFlightInfo f4("London", 23, 120, -5000);
-	CCrewMember* pC1 = pDelta->getCrewMember(-1);
+	try {
+		CCrewMember* pC2 = pDelta->getCrewMember(0);
+		(*pC2) += -4;
+	}
+	catch (const CFlightCompException& e) {
+		e.show();
+	}
 
-	CCrewMember* pC2 = pDelta->getCrewMember(0);
-	(*pC2) += -4;
-	CPlane p0 = (*pDelta)[9];
+	try {
+		CPlane p0 = (*pDelta)[9];
+	}
+	catch (const CFlightCompException& e) {
+		e.show();
+	}
 
-
+	
 
 	//call a static function that get plane or customer from user.
 
@@ -87,9 +104,11 @@ void main()
 
 	delete pDelta;
 
-
+	
 
 
 
 	system("pause");
+	
+return 0;
 }

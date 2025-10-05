@@ -8,7 +8,6 @@ using namespace std;
 class CPlane
 {
 private:
-	static int nextSerial;
 	int serialNumber;
 	int seatCount;
 	string modelName;
@@ -54,5 +53,6 @@ public:
 
 	CPlane& operator=(const CPlane& other);
 
+	static int nextSerial;
 
 };

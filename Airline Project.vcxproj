@@ -132,6 +132,7 @@
     <ClCompile Include="CPilot.cpp" />
     <ClCompile Include="CPlane.cpp" />
     <ClCompile Include="CCrewMember.cpp" />
+    <ClCompile Include="CPlaneCrewFactory.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -139,11 +140,13 @@
     <ClInclude Include="CCargo.h" />
     <ClInclude Include="CFlight.h" />
     <ClInclude Include="CFlightCompany.h" />
+    <ClInclude Include="CFlightCompException.h" />
     <ClInclude Include="CFlightInfo.h" />
     <ClInclude Include="CHost.h" />
     <ClInclude Include="CPilot.h" />
     <ClInclude Include="CPlane.h" />
     <ClInclude Include="CCrewMember.h" />
+    <ClInclude Include="CPlaneCrewFactory.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
