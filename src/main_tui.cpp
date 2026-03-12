@@ -37,12 +37,15 @@ int main() {
 
     // Application state
     int tab_index = 0;
+    bool should_save = false; // Flag to determine if we should save on exit
+
     std::vector<std::string> tab_entries = {
         "📊 Dashboard",
         "👥 Crew Members",
-        "🛬 Planes",
+        "🛩 Planes",
         "🛫 Flights",
-        "💾 Save & Exit"
+        "📝 Manage Data",
+        "🚪 Exit Options"
     };
 
     auto tab_selection = Radiobox(&tab_entries, &tab_index);
@@ -200,12 +203,147 @@ int main() {
     });
 
 
+    // --- Manage Data View ---
+    int form_type_index = 0;
+    std::vector<std::string> form_types = {"Add Plane", "Add Crew Member", "Add Flight"};
+    auto form_selection = Radiobox(&form_types, &form_type_index);
+
+    // Plane form inputs
+    std::string input_model = "";
+    std::string input_seats = "";
+    int plane_type_index = 0;
+    std::vector<std::string> plane_types = {"Regular", "Cargo"};
+    auto plane_type_selection = Radiobox(&plane_types, &plane_type_index);
+    std::string input_weight = "";
+    std::string input_volume = "";
+
+    // Crew form inputs
+    std::string input_name = "";
+    std::string input_minutes = "";
+    int crew_type_index = 0;
+    std::vector<std::string> crew_types = {"Pilot", "Host"};
+    auto crew_type_selection = Radiobox(&crew_types, &crew_type_index);
+    bool is_captain = false;
+    int host_type_index = 0;
+    std::vector<std::string> host_types = {"Regular", "Super", "Purser"};
+    auto host_type_selection = Dropdown(&host_types, &host_type_index);
+
+    // Flight form inputs
+    std::string input_dest = "";
+    std::string input_flight_num = "";
+    std::string input_duration = "";
+    std::string input_distance = "";
+
+    std::string form_message = "";
+
+    // Submission Actions
+    auto submit_plane = [&] {
+        try {
+            int seats = stoi(input_seats);
+            if (plane_type_index == 0) {
+                CPlane plane(seats, input_model);
+                if (company->addPlane(plane)) form_message = "Success: Plane added!";
+                else form_message = "Error: Could not add plane.";
+            } else {
+                float weight = stof(input_weight);
+                float volume = stof(input_volume);
+                CCargo cargo(seats, input_model, weight, volume, 0, 0);
+                if (company->addPlane(cargo)) form_message = "Success: Cargo plane added!";
+                else form_message = "Error: Could not add cargo plane.";
+            }
+            input_model = ""; input_seats = ""; input_weight = ""; input_volume = "";
+        } catch (...) { form_message = "Error: Invalid numeric input."; }
+    };
+
+    auto submit_crew = [&] {
+        try {
+            int mins = stoi(input_minutes);
+            if (crew_type_index == 0) {
+                CPilot pilot(input_name, is_captain, nullptr, mins);
+                if (company->addCrewMember(pilot)) form_message = "Success: Pilot added!";
+                else form_message = "Error: Could not add pilot.";
+            } else {
+                CHost host(input_name, static_cast<CHost::eHostType>(host_type_index), mins);
+                if (company->addCrewMember(host)) form_message = "Success: Host added!";
+                else form_message = "Error: Could not add host.";
+            }
+            input_name = ""; input_minutes = "";
+        } catch (...) { form_message = "Error: Invalid numeric input."; }
+    };
+
+    auto submit_flight = [&] {
+        try {
+            int fnum = stoi(input_flight_num);
+            int mins = stoi(input_duration);
+            int dist = stoi(input_distance);
+            CFlightInfo info(input_dest, fnum, mins, dist);
+            CFlight flight(info);
+            if (company->addFlight(flight)) form_message = "Success: Flight added!";
+            else form_message = "Error: Could not add flight.";
+            input_dest = ""; input_flight_num = ""; input_duration = ""; input_distance = "";
+        } catch (...) { form_message = "Error: Invalid numeric input."; }
+    };
+
+    // Input options for styling (placeholder is normal, text is bright/bold)
+    InputOption input_opt;
+    input_opt.transform = [](InputState state) {
+        if (state.is_placeholder) {
+            return state.element; // Normal terminal color for placeholders (e.g. "Enter Model Name")
+        }
+        return state.element | dim; // Dimmer color for the text being typed by the user
+    };
+
+    // Form containers
+    auto plane_form = Container::Vertical({
+        Input(&input_model, "Enter Model Name (e.g. Boeing-737)", input_opt),
+        Input(&input_seats, "Enter Seat Count (e.g. 150)", input_opt),
+        plane_type_selection,
+        Maybe(Container::Vertical({
+            Input(&input_weight, "Enter Max Weight kg (e.g. 5000)", input_opt),
+            Input(&input_volume, "Enter Max Volume m3 (e.g. 200)", input_opt),
+        }), [&] { return plane_type_index == 1; }),
+        Button("Submit Plane", submit_plane, ButtonOption::Ascii())
+    });
+
+    auto crew_form = Container::Vertical({
+        Input(&input_name, "Enter Name", input_opt),
+        Input(&input_minutes, "Enter Flight Minutes", input_opt),
+        crew_type_selection,
+        Maybe(Checkbox("Is Captain?", &is_captain), [&] { return crew_type_index == 0; }),
+        Maybe(host_type_selection, [&] { return crew_type_index == 1; }),
+        Button("Submit Crew Member", submit_crew, ButtonOption::Ascii())
+    });
+
+    auto flight_form = Container::Vertical({
+        Input(&input_dest, "Enter Destination", input_opt),
+        Input(&input_flight_num, "Enter Flight Number (e.g. 303)", input_opt),
+        Input(&input_duration, "Enter Duration in mins", input_opt),
+        Input(&input_distance, "Enter Distance in km", input_opt),
+        Button("Submit Flight", submit_flight, ButtonOption::Ascii())
+    });
+
+    auto forms_container = Container::Tab({plane_form, crew_form, flight_form}, &form_type_index);
+    auto manage_data_container = Container::Vertical({form_selection, forms_container});
+
+    auto manage_data_render = Renderer(manage_data_container, [&] {
+        return vbox({
+            text("📝 MANAGE DATA") | bold | center,
+            separator(),
+            hbox({
+                window(text(" Select Entry Type "), form_selection->Render()),
+                window(text(" Input Form "), forms_container->Render() | flex) | flex
+            }) | flex,
+            text(form_message) | center | color(Color::YellowLight)
+        });
+    });
+
     // --- Main Layout ---
     auto tab_content = Container::Tab({
         dashboard_render,
         crew_render,
         planes_render,
         flights_render,
+        manage_data_render,
         Renderer([&screen]{ 
             return vbox({
                 text("Are you sure you want to exit?"),
@@ -214,23 +352,43 @@ int main() {
         })
     }, &tab_index);
 
-    // Add a quit button logic
-    auto quit_button = Button("Quit Application", screen.ExitLoopClosure());
+    // Add exit buttons logic
+    auto save_and_quit_button = Button("Save & Quit", [&] {
+        should_save = true;
+        screen.ExitLoopClosure()();
+    }, ButtonOption::Ascii());
+
+    auto quit_without_saving_button = Button("Quit Without Saving", [&] {
+        should_save = false;
+        screen.ExitLoopClosure()();
+    }, ButtonOption::Ascii());
+
+    auto go_back_button = Button("Go Back", [&] {
+        tab_index = 0; // Return to dashboard
+    }, ButtonOption::Ascii());
     
     // Combine sidebar and main content
     auto main_container = Container::Vertical({
         tab_selection,
         tab_content,
-        quit_button
+        save_and_quit_button,
+        quit_without_saving_button,
+        go_back_button
     });
 
     auto render_layout = Renderer(main_container, [&] {
-        // If we selected "Save & Exit"
-        if (tab_index == 4) {
-            return window(text(" Exit "), vbox({
-                text("Data saved automatically (simulated)."),
+        // If we selected "Exit Options" (now index 5)
+        if (tab_index == 5) {
+            return window(text(" Exit Options "), vbox({
+                text("Would you like to save your changes to Delta.txt before exiting?"),
                 separatorEmpty(),
-                quit_button->Render() | center
+                hbox({
+                    save_and_quit_button->Render() | color(Color::Green) | center | flex,
+                    text("   "),
+                    quit_without_saving_button->Render() | color(Color::Red) | center | flex
+                }) | center,
+                separatorEmpty(),
+                go_back_button->Render() | center
             }) | center);
         }
 
@@ -248,10 +406,12 @@ int main() {
 
     screen.Loop(render_layout);
     
-    // Save on exit
-    try {
-        company->saveToFile("data/Delta.txt");
-    } catch (...) {}
+    // Save on exit based on user choice
+    if (should_save) {
+        try {
+            company->saveToFile("data/Delta.txt");
+        } catch (...) {}
+    }
 
     return 0;
 }
