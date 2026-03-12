@@ -11,7 +11,7 @@ public:
     enum eHostType {
         eRegular,
         eSuper,
-        eCalcelan
+        ePurser
     };
 
 private:

@@ -1,5 +1,6 @@
 #include "CCargo.h"
 #include <iostream>
+#include <iomanip>
 
 using namespace std;
 
@@ -132,11 +133,7 @@ ostream& operator<<(ostream& os, const CCargo& cargo)
 
 void CCargo::print(ostream& os) const
 {
-    os << "Cargo Plane " << getSerialNumber()
-       << " degem " << getModelName()
-       << " seats " << getSeatCount()
-       << " max cargo weight " << maxCargoWeightKg << " kg"
-       << " max cargo volume " << maxCargoVolume << " m3"
-       << " current cargo weight " << currCargoWeightKg << " kg"
-       << " current cargo volume " << currCargoVolume << " m3" << endl;
+    os << left << setw(10) << getSerialNumber() << " | " << setw(15) << getModelName() << " | " << setw(10) << getSeatCount() << " | Cargo Plane [" 
+       << currCargoWeightKg << "/" << maxCargoWeightKg << " kg, " 
+       << currCargoVolume << "/" << maxCargoVolume << " m3]\n";
 }

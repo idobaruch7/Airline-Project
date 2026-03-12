@@ -1,5 +1,6 @@
 #include "CFlightCompany.h"
 #include <iostream>
+#include <iomanip>
 #include "CPilot.h"
 #include "CHost.h"
 #include <fstream>
@@ -44,7 +45,7 @@ void CFlightCompany::pilotsToSimulator() const
 void CFlightCompany::crewGetPresent() const {
 	for (int i = 0; i < crewCount; i++) {
 		if (crewMembers[i] != nullptr) {
-			crewMembers[i]->receivePresent(); // ÷øéàä ôåìéîåøôéú
+			crewMembers[i]->receivePresent(); // ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		}
 	}
 }
@@ -54,7 +55,7 @@ void CFlightCompany::crewGetUniform() const
 {
 	for (int i = 0; i < crewCount; ++i) {
 		if (crewMembers[i]) {
-			crewMembers[i]->receiveUniform();   // ÷øéàä ôåìéîåøôéú
+			crewMembers[i]->receiveUniform();   // ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		}
 	}
 }
@@ -258,29 +259,35 @@ void CFlightCompany::print(ostream& os) const
 		throw CCompStringException("Company has no name");
 	}
 
-	os << "Flight company: " << companyName << endl;
+	os << "\n=============================================\n";
+	os << "ðŸ¢ FLIGHT COMPANY: " << companyName << "\n";
+	os << "=============================================\n";
 
 	// Print crew members
-	os << "There are " << crewCount << " Crew members:" << endl;
+	os << "\n--- CREW MEMBERS (" << crewCount << ") ---\n";
+	os << left << setw(15) << "NAME" << " | " << setw(10) << "ROLE" << " | " << setw(10) << "MINUTES" << " | INFO\n";
+	os << string(60, '-') << "\n";
 	for (int i = 0; i < crewCount; i++) {
 		if (crewMembers[i] != nullptr) {
-			crewMembers[i]->print(); // This still outputs directly to cout
+			crewMembers[i]->print(os); 
 		}
 	}
 
 	// Print planes
-	os << "There are " << planeCount << " Planes:" << endl;
+	os << "\n--- PLANES (" << planeCount << ") ---\n";
+	os << left << setw(10) << "SERIAL" << " | " << setw(15) << "MODEL" << " | " << setw(10) << "SEATS" << " | INFO\n";
+	os << string(60, '-') << "\n";
 	for (int i = 0; i < planeCount; i++) {
 		if (planes[i] != nullptr) {
-			os << *planes[i]; // This will now use the correct virtual print method
+			planes[i]->print(os); 
 		}
 	}
 
 	// Print flights
-	os << "There are " << flightCount << " Flights:" << endl;
+	os << "\n--- FLIGHTS (" << flightCount << ") ---\n";
 	for (int i = 0; i < flightCount; i++) {
 		if (flights[i] != nullptr) {
-			flights[i]->print(); // This still outputs directly to cout
+			flights[i]->print(os); 
 		}
 	}
 }

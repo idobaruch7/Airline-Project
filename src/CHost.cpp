@@ -1,5 +1,6 @@
 #include "CHost.h"
 #include <iostream>
+#include <iomanip>
 
 using namespace std;
 
@@ -34,7 +35,7 @@ void CHost::setHostType(eHostType type)
 // Virtual method implementations
 void CHost::receivePresent() const
 {
-    cout << name << " thanking hte company for receiving the holiday gift. I wasn't expecting it" << endl;
+    cout << name << " thanking the company for receiving the holiday gift. I wasn't expecting it" << endl;
 }
 
 void CHost::receiveUniform() const
@@ -50,24 +51,12 @@ void CHost::updateFlightTime(int flightTimeMinutes)
 
 void CHost::print() const
 {
-    cout << "Host " << name << " minutes " << airTime << " Type: ";
-    switch (hostType) {
-        case eRegular:
-            cout << "Regular ";
-            break;
-        case eSuper:
-            cout << "Super ";
-            break;
-        case eCalcelan:
-            cout << "Calcelan ";
-            break;
-    }
-    cout << endl;
+    print(cout);
 }
 
 void CHost::print(ostream& os) const
 {
-    os << "Host ";
+    os << left << setw(15) << name << " | " << setw(10) << "Host" << " | " << setw(10) << airTime << " | ";
     switch (hostType) {
         case eRegular:
             os << "Regular";
@@ -75,11 +64,11 @@ void CHost::print(ostream& os) const
         case eSuper:
             os << "Super";
             break;
-        case eCalcelan:
-            os << "Calcelan";
+        case ePurser:
+            os << "Purser";
             break;
     }
-    os << name << " minutes " << airTime << " Type: " << endl;
+    os << "\n";
 }
 
 // Assignment operator

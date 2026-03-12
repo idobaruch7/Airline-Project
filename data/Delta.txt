@@ -1,14 +1,19 @@
-FFF
-3
-0 ieie 20 2
-1 lala 20 0 1
-0 KAKKA 20 1
-2
-0 103 100 popo 20
-0 103 101 boing 30
+Delta Airlines
+4
+0 Emily 120 2
+1 John 450 1 120 5thAve NewYork 1
+0 Sarah 80 0
+1 Michael 300 0 0
+4
+0 105 100 Boeing-737 180
+0 105 101 Airbus-A320 150
+0 105 102 Boeing-777 300
+1 103 Boeing-747F 3
+500 10000 200 4500
 1
 Paris 343 320 5000 1 0
-3
-0 ieie 20 2
-1 lala 20 0 1
-0 KAKKA 20 1
+4
+0 Emily 120 2
+1 John 450 1 120 5thAve NewYork 1
+0 Sarah 80 0
+1 Michael 300 0 0

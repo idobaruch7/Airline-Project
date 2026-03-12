@@ -176,7 +176,7 @@ CCrewMember* CPlaneCrewFactory::GetCrewFromUser()
 	if (type == eHost) {
 		// Get host-specific data
 		int hostType;
-		cout << "Select host type (0 - Regular, 1 - Super, 2 - Calcelan): ";
+		cout << "Select host type (0 - Regular, 1 - Super, 2 - Purser): ";
 		cin >> hostType;
 
 		return new CHost(name, static_cast<CHost::eHostType>(hostType), minutes);

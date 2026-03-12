@@ -1,5 +1,6 @@
 #include "CPilot.h"
 #include <iostream>
+#include <iomanip>
 #include <cmath>
 
 using namespace std;
@@ -111,39 +112,23 @@ bool CPilot::isEqual(const CCrewMember& other) const
 
 void CPilot::print() const
 {
-    cout << "Pilot " << name << " minutes " << airTime;
-    if (hasAddress()) {
-        cout << " Address: ";
-        address->print();
-    } else {
-        cout << " No address" << endl;
-    }
-    if (isCaptain) {
-        cout << " Captain\n";
-    }
-    else
-    {
-        cout << " Not a Captain\n";
-    }
+    print(cout);
 }
 
 void CPilot::print(ostream& os) const
 {
-    os << "Pilot " << name << " minutes " << airTime;
+    os << left << setw(15) << name << " | " << setw(10) << "Pilot" << " | " << setw(10) << airTime << " | ";
+    
     if (isCaptain) {
-        os << " a Captain";
-    }
-    else
-    {
-        os << " \nNot a Captain";
+        os << "Captain";
+    } else {
+        os << "Co-Pilot";
     }
 
     if (hasAddress()) {
-        os << " Home ";
-        os << *address;
-    } else {
-        os << " No address" << endl;
+        os << " [Home: " << address->getCity() << "]";
     }
+    os << "\n";
 }
 
 // Pilot specific methods

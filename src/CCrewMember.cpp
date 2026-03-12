@@ -1,5 +1,6 @@
 #include "CCrewMember.h"
 #include <iostream>
+#include <iomanip>
 #include <string>
 using namespace std;
 
@@ -60,13 +61,13 @@ int CCrewMember::getAirTime() const
 // Print - basic implementation that can be overridden
 void CCrewMember::print() const
 {
-    cout << "Crewmember " << this->name << " minutes " << this->airTime << endl;
+    print(cout);
 }
 
 // Print with ostream parameter - basic implementation that can be overridden
 void CCrewMember::print(ostream& os) const
 {
-    os << "Crewmember " << this->name << " minutes " << this->airTime << endl;
+    os << left << setw(15) << name << " | " << setw(10) << "Unknown" << " | " << setw(10) << airTime << " |\n";
 }
 
 // Compare by name (base implementation)

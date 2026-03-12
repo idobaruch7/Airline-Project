@@ -54,6 +54,7 @@ public:
 
     // Utility methods
     void print() const;                             // Print flight details
+    void print(ostream& os) const;
     bool takeOff();
 
     // Operators

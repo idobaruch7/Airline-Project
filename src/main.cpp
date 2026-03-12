@@ -1,8 +1,7 @@
 #define _CRT_SECURE_NO_DEPRECATE
 
 #include <iostream>
-using namespace std;
-
+#include <limits>
 #include "CPlane.h"
 #include "CFlightInfo.h"
 #include "CCrewMember.h"
@@ -15,100 +14,88 @@ using namespace std;
 #include "CFlightCompException.h"
 #include "CPlaneCrewFactory.h"
 
-//const int CM_COUNT = 5;
-//const int PLANE_COUNT = 4;
-//const int FLIGHT_COUNT = 4;
+using namespace std;
+
+void showMenu() {
+    cout << "\n=============================================\n";
+    cout << "         ✈️  AIRLINE MANAGEMENT SYSTEM \n";
+    cout << "=============================================\n";
+    cout << "[1] View Company Information\n";
+    cout << "[2] Add Data (Planes & Crew)\n";
+    cout << "[3] Add New Flight\n";
+    cout << "[4] Save Data to File\n";
+    cout << "[0] Exit\n";
+    cout << "=============================================\n";
+    cout << "Select an option: ";
+}
 
 int main()
 {
+    CFlightCompany* pDelta = nullptr;
 
-	CFlightCompany* pDelta = NULL;
-	try
-	{
+    try {
+        pDelta = new CFlightCompany("data/Delta.txt", 0);
+        cout << "Successfully loaded company data from file.\n";
+    }
+    catch (const CFlightCompException& e) {
+        cout << "Could not load existing data or file missing. Starting fresh.\n";
+        pDelta = new CFlightCompany("Delta Airlines");
+    }
 
-		pDelta = new CFlightCompany("data/Delta.txt", 0);
-		cout << "This was in file " << endl;
-		pDelta->print(cout);
+    int choice;
+    do {
+        showMenu();
+        if (!(cin >> choice)) {
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            continue;
+        }
 
-	}
-	catch (const CFlightCompException& e) {
-		e.show();
-		pDelta = new CFlightCompany("Delta");
-	}
+        try {
+            switch (choice) {
+                case 1:
+                    pDelta->print(cout);
+                    break;
+                case 2:
+                    CPlaneCrewFactory::GetCompanyDataFromUser(*pDelta);
+                    break;
+                case 3: {
+                    string dest;
+                    int flightNum, minutes, km;
+                    cout << "Enter destination: ";
+                    cin >> dest;
+                    cout << "Enter flight number: ";
+                    cin >> flightNum;
+                    cout << "Enter duration (minutes): ";
+                    cin >> minutes;
+                    cout << "Enter distance (km): ";
+                    cin >> km;
+                    
+                    CFlightInfo info(dest, flightNum, minutes, km);
+                    CFlight flight(info);
+                    
+                    if (pDelta->addFlight(flight)) {
+                        cout << "Flight added successfully!\n";
+                    } else {
+                        cout << "Failed to add flight.\n";
+                    }
+                    break;
+                }
+                case 4:
+                    pDelta->saveToFile("data/Delta.txt");
+                    break;
+                case 0:
+                    cout << "Exiting...\n";
+                    break;
+                default:
+                    cout << "Invalid choice. Please try again.\n";
+            }
+        }
+        catch (const CFlightCompException& e) {
+            e.show();
+        }
+    } while (choice != 0);
 
-	
-	
-	//Checking some of the exception put try and catch for each section	
-	try {
-		CPlane p1(-34, "AirBus");
-		CCargo c1(45, "Jumbo", -560, 200);
-		CCargo c2(45, "Jumbo", 560, -200);
-		CFlightInfo f1("London", -23, 120, 5000);
-		CFlightInfo f2("LondonVeryLong", 23, 120, 5000);
-		CFlightInfo f3("London", 23, -120, 5000);
-		CFlightInfo f4("London", 23, 120, -5000);
-		CCrewMember* pC1 = pDelta->getCrewMember(-1);
-	}
-	catch (const CFlightCompException& e) {
-		e.show();
-	}
-
-	try {
-		CCrewMember* pC2 = pDelta->getCrewMember(0);
-		(*pC2) += -4;
-	}
-	catch (const CFlightCompException& e) {
-		e.show();
-	}
-
-	try {
-		CPlane p0 = (*pDelta)[9];
-	}
-	catch (const CFlightCompException& e) {
-		e.show();
-	}
-
-	
-
-	//call a static function that get plane or customer from user.
-
-	CPlaneCrewFactory::GetCompanyDataFromUser(*pDelta);
-
-
-	CFlightInfo Info("Paris", 343, 320, 5000);
-	CFlight flight1(Info, &(*pDelta)[0]);
-	pDelta->addFlight(flight1);
-
-
-	CFlight* pF = pDelta->getFlightByNum(343);
-	CCrewMember* pCmTemp;
-	if (pF != NULL) {
-		cout << "flight 343 was found " << endl;
-		for (int i = 0; i < pDelta->getCrewCount(); i++) {
-			pCmTemp = pDelta->getCrewMember(i);
-			*pF + pCmTemp;
-		}
-	}
-
-
-	try
-	{
-
-		pDelta->saveToFile("data/Delta.txt");
-
-	}
-	catch (const CFlightCompException& e) {
-		e.show();
-	}
-
-
-	delete pDelta;
-
-	
-
-
-
-	system("pause");
-	
-return 0;
+    delete pDelta;
+    return 0;
 }

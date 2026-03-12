@@ -1,5 +1,6 @@
 #include "CPlane.h"
 #include <iostream>
+#include <iomanip>
 #include <string>
 #include "CCargo.h"
 
@@ -87,9 +88,7 @@ bool CPlane::isEqual(const CPlane& other) const
 
 void CPlane::print(ostream& os) const
 {
-	os << "Plane " << serialNumber
-		<< " degem " << modelName
-		<< " seats " << seatCount << endl;
+	os << left << setw(10) << serialNumber << " | " << setw(15) << modelName << " | " << setw(10) << seatCount << " | Standard Plane\n";
 }
 
 //Operations Functions

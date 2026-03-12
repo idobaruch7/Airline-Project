@@ -1,5 +1,6 @@
 #include "CFlight.h"
 #include <iostream>
+#include <iomanip>
 
 using namespace std;
 
@@ -254,63 +255,62 @@ bool CFlight::operator==(const CFlight& other) const
 // The existing operator<< serves as the print operator (equivalent to operator>>)
 ostream& operator<<(ostream& os, const CFlight& flight)
 {
-	os << "Flight ";
-	os << "Flight Info dest: " << flight.flightInfo.getDest()
-	   << " Number " << flight.flightInfo.getFlightNumber()
-	   << " minutes " << flight.flightInfo.getFlightTimeMinutes()
-	   << " KM " << flight.flightInfo.getDistanceKM() << endl;
+	os << "Flight " << flight.flightInfo.getFlightNumber() << " to " << flight.flightInfo.getDest()
+	   << " | Duration: " << flight.flightInfo.getFlightTimeMinutes() << " mins"
+	   << " | Distance: " << flight.flightInfo.getDistanceKM() << " km\n";
 	
 	if (flight.hasPlane())
 	{
-		os << "Plane " << flight.assignedPlane->getSerialNumber()
-		   << " degem " << flight.assignedPlane->getModelName()
-		   << " seats " << flight.assignedPlane->getSeatCount() << endl;
+		os << "  -> Assigned Plane: " << flight.assignedPlane->getModelName() 
+		   << " (Serial: " << flight.assignedPlane->getSerialNumber() << ")\n";
 	}
 	else
 	{
-		os << " No plane assign yet";
+		os << "  -> No plane assigned yet\n";
 	}
 	
-	os << "  There are " << flight.crewCount << " crew memebers in flight:" << endl;
+	os << "  -> Crew: " << flight.crewCount << " members\n";
 	
 	return os;
 }
 
 void CFlight::print() const
 {
-	cout << "Flight ";
-	flightInfo.print();
-	
-	if (hasPlane())
-	{
-		assignedPlane->print();
-	}
-	else
-	{
-		cout << " No plane assign yet";
-	}
-
-	cout << "There are " << crewCount << " crew memebers in flight:" << endl;
+	cout << *this;
 	for (int i = 0; i < crewCount; i++)
 	{
 		if (crewMembers[i] != nullptr)
 		{
-			crewMembers[i]->print();
+			cout << "     ";
+			crewMembers[i]->print(cout);
+		}
+	}
+}
+
+void CFlight::print(ostream& os) const
+{
+	os << *this;
+	for (int i = 0; i < crewCount; i++)
+	{
+		if (crewMembers[i] != nullptr)
+		{
+			os << "     ";
+			crewMembers[i]->print(os);
 		}
 	}
 }
 
 bool CFlight::takeOff()
 {
-    //жоп ийсд 
+    //пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ 
     int minutes = flightInfo.getFlightTimeMinutes();
     
-    // зййб мдйеъ оиес ощебх
+    // пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
     if (!assignedPlane) {
         throw CCompStringException("Cannot take off: No plane assigned to flight");
     }
 
-    // сфш иййсйн егйймйн блйшйн
+    // пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
     int pilots = 0;
     int seniorHosts = 0;
 
@@ -321,7 +321,7 @@ bool CFlight::takeOff()
             ++pilots;
         }
         else if (CHost* h = dynamic_cast<CHost*>(crewMembers[i])) {
-            // тглп мфй щн двиш щмк мийфес дгййм/ъ
+            // пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ/пїЅ
             if (h->getHostType() == CHost::eSuper)
             {
                 seniorHosts++;
@@ -332,16 +332,16 @@ bool CFlight::takeOff()
     CCargo* cargo = dynamic_cast<CCargo*>(assignedPlane);
     const bool isCargo = cargo != nullptr;
 
-    // бгйчеъ зечйеъ мфй ддрзйеъ
+    // пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
     if (isCargo) {
-        // ийсъ оитп: мфзеъ иййс азг
+        // пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ: пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ
         if (pilots < 1) {
             throw CCompStringException("Cannot take off: Cargo flight requires at least 1 pilot");
         }
         cargo->takeOff(minutes);
     }
     else {
-        // ийсъ рестйн: бгйеч щрй иййсйн, еан йщ гййм блйш – млм дйеъш азг
+        // пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ: пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ
         if (pilots != 1) {
             throw CCompStringException("Cannot take off: Passenger flight requires exactly 1 pilot");
         }
