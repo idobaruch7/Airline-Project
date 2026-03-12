@@ -284,13 +284,13 @@ int main() {
         } catch (...) { form_message = "Error: Invalid numeric input."; }
     };
 
-    // Input options for styling (placeholder is normal, text is bright/bold)
+    // Input options for styling (placeholder is dim, text is normal)
     InputOption input_opt;
     input_opt.transform = [](InputState state) {
         if (state.is_placeholder) {
-            return state.element; // Normal terminal color for placeholders (e.g. "Enter Model Name")
+            return state.element | dim; // Dimmer color for placeholders
         }
-        return state.element | dim; // Dimmer color for the text being typed by the user
+        return state.element; // Normal terminal color for the text being typed
     };
 
     // Form containers
