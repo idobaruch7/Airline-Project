@@ -158,6 +158,24 @@ int CFlightCompany::getCrewCount() const
 	return crewCount;
 }
 
+int CFlightCompany::getPlaneCount() const
+{
+	return planeCount;
+}
+
+int CFlightCompany::getFlightCount() const
+{
+	return flightCount;
+}
+
+CFlight* CFlightCompany::getFlight(int index)
+{
+	if (index >= 0 && index < flightCount) {
+		return flights[index];
+	}
+	return nullptr;
+}
+
 bool CFlightCompany::addCrewMember(const CCrewMember& member)
 {
 	// Check if we've reached maximum capacity

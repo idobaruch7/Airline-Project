@@ -57,6 +57,9 @@ public:
 	CFlight* getFlightByNum(int flightNumber);
 	CCrewMember* getCrewMember(const int index);
 	int getCrewCount() const;
+	int getPlaneCount() const;
+	int getFlightCount() const;
+	CFlight* getFlight(int index);
 
 	// Replace getPlane with operator[]
 	CPlane& operator[](int index);              // For modification

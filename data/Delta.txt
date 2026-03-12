@@ -5,9 +5,9 @@ Delta Airlines
 0 Sarah 80 0
 1 Michael 300 0 0
 4
-0 105 100 Boeing-737 180
-0 105 101 Airbus-A320 150
-0 105 102 Boeing-777 300
+0 104 100 Boeing-737 180
+0 104 101 Airbus-A320 150
+0 104 102 Boeing-777 300
 1 103 Boeing-747F 3
 500 10000 200 4500
 1
