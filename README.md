@@ -9,10 +9,9 @@ A complete Airline Management System built in C++. This project demonstrates obj
 ---
 
 ## 📸 Previews
-*(Upload your screenshots to the `/screenshots` folder and add them here!)*
-<!-- Example: -->
-<!-- ![Dashboard](screenshots/dashboard.png) -->
-<!-- ![Manage Data](screenshots/manage_data.png) -->
+<img width="1338" height="906" alt="image" src="https://github.com/user-attachments/assets/567f05f8-efd2-405c-9219-398ea84f7f19" />
+<img width="1338" height="906" alt="image" src="https://github.com/user-attachments/assets/c2ff5a26-907c-4714-95b5-6f20eac9c08f" />
+
 
 ---
 
