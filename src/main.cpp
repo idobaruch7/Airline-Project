@@ -26,7 +26,7 @@ int main()
 	try
 	{
 
-		pDelta = new CFlightCompany("Delta.txt", 0);
+		pDelta = new CFlightCompany("data/Delta.txt", 0);
 		cout << "This was in file " << endl;
 		pDelta->print(cout);
 
@@ -94,7 +94,7 @@ int main()
 	try
 	{
 
-		pDelta->saveToFile("Delta.txt");
+		pDelta->saveToFile("data/Delta.txt");
 
 	}
 	catch (const CFlightCompException& e) {
