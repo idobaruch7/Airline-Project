@@ -31,8 +31,8 @@ You can build and run the project in a container without installing any C++ tool
 ### Pull Pre-built Image
 A pre-built image is automatically published to GitHub Container Registry on every push to `master`:
 ```bash
-docker pull ghcr.io/idobaruch7/airline-project:stable
-docker run -it ghcr.io/idobaruch7/airline-project:stable
+docker pull ghcr.io/idobaruch7/airline-project:latest
+docker run -it ghcr.io/idobaruch7/airline-project:latest
 ```
 
 ### Build Locally
