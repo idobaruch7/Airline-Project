@@ -1,0 +1,14 @@
+build/
+
+.git/
+.gitattributes
+.gitignore
+
+.vscode/
+
+screenshots/
+README.md
+
+*.sln
+*.vcxproj
+*.vcxproj.filters

@@ -24,6 +24,32 @@ A complete Airline Management System built in C++. This project demonstrates obj
 
 ---
 
+## 🐳 Docker
+
+You can build and run the project in a container without installing any C++ toolchain locally.
+
+### Pull Pre-built Image
+A pre-built image is automatically published to GitHub Container Registry on every push to `master`:
+```bash
+docker pull ghcr.io/idobaruch7/airline-project:stable
+docker run -it ghcr.io/idobaruch7/airline-project:stable
+```
+
+### Build Locally
+```bash
+docker build -t airline-project .
+
+# Interactive TUI (default)
+docker run -it airline-project
+
+# CLI version
+docker run -it airline-project AirlineProject
+```
+
+> The image uses a multi-stage build. GCC 13 compiles the project in the first stage, then only the binaries are copied into a slim Debian runtime (~78MB).
+
+---
+
 ## 🛠️ Build & Installation Instructions
 
 This project uses **CMake** to automatically handle dependencies (it will download the FTXUI library for you during configuration).
@@ -67,6 +93,8 @@ Ensure you run the executables from the root of the project so they can correctl
 ```text
 Airline-Project/
 ├── CMakeLists.txt         # Build configuration & dependency fetcher
+├── Dockerfile             # Multi-stage Docker build
+├── .dockerignore          # Files excluded from Docker builds
 ├── src/                   # C++ Implementation Files
 │   ├── main.cpp           # Standard CLI Entry Point
 │   ├── main_tui.cpp       # FTXUI Interactive Entry Point
