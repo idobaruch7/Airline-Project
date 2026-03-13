@@ -3,6 +3,11 @@
 ![C++](https://img.shields.io/badge/C++-17-blue.svg)
 ![CMake](https://img.shields.io/badge/CMake-Build-success.svg)
 ![FTXUI](https://img.shields.io/badge/UI-FTXUI-orange)
+![Docker Badge](https://img.shields.io/badge/Docker-Build-success.svg)
+![Workflow Status](https://github.com/idobaruch7/Airline-Project/actions/workflows/docker.yaml/badge.svg)
+
+
+
 
 A complete Airline Management System built in C++. This project demonstrates object-oriented programming, data persistence, and modern C++ build systems. It features both a standard Command Line Interface (CLI) for automated testing environments and a fully interactive **Terminal User Interface (TUI)** built with `FTXUI`.
 
